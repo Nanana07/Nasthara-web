@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { CartProvider } from '@/contexts/CartContext';
 
 export const metadata: Metadata = {
   title: 'Nastthara Bites',
@@ -20,7 +21,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,14..72,200..900;1,14..72,200..900&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        {children}
+        <CartProvider>
+          {children}
+        </CartProvider>
         <Toaster />
       </body>
     </html>

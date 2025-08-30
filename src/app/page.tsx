@@ -6,7 +6,9 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, MessageCircle, Cookie, Wheat, ChefHat, Star, Minus, Plus } from 'lucide-react';
+import { Instagram, MessageCircle, Cookie, Wheat, ChefHat, Star, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { useCart, type CartItem } from '@/contexts/CartContext';
+import type { Product } from '@/types/product';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -18,31 +20,36 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import CookieRecommender from '@/components/cookie-recommender';
+import { useToast } from '@/hooks/use-toast';
 
-const products = [
+const products: Product[] = [
   {
     name: 'Nastar',
     description: 'Classic pineapple tarts with a buttery, melt-in-your-mouth crust.',
     image: 'https://picsum.photos/600/400',
     hint: 'nastar cookie',
+    price: 100000,
   },
   {
     name: 'Lidah Kucing',
     description: 'Thin, crispy, and light cookies, perfect with a cup of tea or coffee.',
     image: 'https://picsum.photos/600/400',
     hint: 'cat tongue cookie',
+    price: 85000,
   },
   {
     name: 'Choco Mede',
     description: 'Rich chocolate cookies packed with crunchy cashew nuts.',
     image: 'https://picsum.photos/600/400',
     hint: 'chocolate cashew cookie',
+    price: 95000,
   },
   {
     name: 'Kastengel',
     description: 'Savory cheese sticks with a satisfying crunch and rich cheesy flavor.',
     image: 'https://picsum.photos/600/400',
     hint: 'cheese cookie',
+    price: 90000,
   },
 ];
 
@@ -64,171 +71,209 @@ const testimonials = [
   },
 ];
 
-const PreOrderFormSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  quantity: z.number().min(1, { message: "Minimum order is 1." }),
-  cookie: z.string(),
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  }).format(price);
+};
+
+const CartDialogFormSchema = z.object({
+  customerName: z.string().min(2, { message: "Nama harus diisi, minimal 2 karakter." }),
 });
 
-type PreOrderFormValues = z.infer<typeof PreOrderFormSchema>;
+type CartDialogFormValues = z.infer<typeof CartDialogFormSchema>;
 
-const Header: FC = () => (
-  <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40">
-    <div className="container mx-auto flex items-center justify-between">
-      <Link href="/" className="flex items-center gap-2">
-        <Cookie className="h-8 w-8 text-primary" />
-        <span className="text-2xl font-bold font-headline text-foreground">Nastthara Bites</span>
-      </Link>
-      <nav className="flex items-center gap-4">
-        <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-          <Button variant="ghost" size="icon">
-            <Instagram className="h-6 w-6 text-accent" />
-          </Button>
+const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
+  const { cartCount } = useCart();
+  return (
+    <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40">
+      <div className="container mx-auto flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <Cookie className="h-8 w-8 text-primary" />
+          <span className="text-2xl font-bold font-headline text-foreground">Nastthara Bites</span>
         </Link>
-        <Link href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-          <Button variant="ghost" size="icon">
-            <MessageCircle className="h-6 w-6 text-accent" />
+        <nav className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={onCartClick} className="relative">
+            <ShoppingCart className="h-6 w-6 text-accent" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                {cartCount}
+              </span>
+            )}
+            <span className="sr-only">Keranjang Belanja</span>
           </Button>
-        </Link>
-      </nav>
-    </div>
-  </header>
-);
+          <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <Button variant="ghost" size="icon">
+              <Instagram className="h-6 w-6 text-accent" />
+            </Button>
+          </Link>
+          <Link href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <Button variant="ghost" size="icon">
+              <MessageCircle className="h-6 w-6 text-accent" />
+            </Button>
+          </Link>
+        </nav>
+      </div>
+    </header>
+  );
+};
 
 const HeroSection: FC = () => (
   <section className="text-center py-20 px-4">
     <div className="container mx-auto">
       <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary mb-4">Freshly Baked with Love</h1>
       <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground mb-8">
-        Discover the taste of home with our artisanal cookies, made from the finest ingredients and baked to perfection just for you.
+        Temukan cita rasa rumahan dalam kukis artisanal kami, dibuat dari bahan-bahan terbaik dan dipanggang dengan sempurna khusus untuk Anda.
       </p>
       <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-        <a href="#products">Pre-Order Now</a>
+        <a href="#products">Pesan Sekarang</a>
       </Button>
     </div>
   </section>
 );
 
-const ProductCard: FC<{ product: typeof products[0], onOrder: () => void }> = ({ product, onOrder }) => (
-  <Card className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg">
-    <CardHeader className="p-0">
-      <div className="aspect-video overflow-hidden">
-        <Image
-          src={product.image}
-          alt={product.name}
-          width={600}
-          height={400}
-          data-ai-hint={product.hint}
-          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-        />
-      </div>
-    </CardHeader>
-    <CardContent className="p-6 flex-grow flex flex-col">
-      <CardTitle className="font-headline text-2xl mb-2">{product.name}</CardTitle>
-      <CardDescription className="text-base text-muted-foreground flex-grow mb-4">{product.description}</CardDescription>
-      <Button onClick={onOrder} className="w-full mt-auto bg-primary hover:bg-primary/90 text-primary-foreground">Pre-Order Now</Button>
-    </CardContent>
-  </Card>
-);
+const ProductCard: FC<{ product: Product }> = ({ product }) => {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
 
-const PreOrderDialog: FC<{
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  cookieName: string;
-}> = ({ isOpen, onOpenChange, cookieName }) => {
-  const form = useForm<PreOrderFormValues>({
-    resolver: zodResolver(PreOrderFormSchema),
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast({
+      title: "Berhasil!",
+      description: `${product.name} telah ditambahkan ke keranjang.`,
+    });
+  };
+
+  return (
+    <Card className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg">
+      <CardHeader className="p-0">
+        <div className="aspect-video overflow-hidden">
+          <Image
+            src={product.image}
+            alt={product.name}
+            width={600}
+            height={400}
+            data-ai-hint={product.hint}
+            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+      </CardHeader>
+      <CardContent className="p-6 flex-grow flex flex-col">
+        <CardTitle className="font-headline text-2xl mb-2">{product.name}</CardTitle>
+        <p className="font-semibold text-lg text-primary mb-2">{formatPrice(product.price)}</p>
+        <CardDescription className="text-base text-muted-foreground flex-grow mb-4">{product.description}</CardDescription>
+        <Button onClick={handleAddToCart} className="w-full mt-auto bg-primary hover:bg-primary/90 text-primary-foreground">
+          <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }> = ({ isOpen, onOpenChange }) => {
+  const { cartItems, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
+
+  const form = useForm<CartDialogFormValues>({
+    resolver: zodResolver(CartDialogFormSchema),
     defaultValues: {
-      name: "",
-      quantity: 1,
-      cookie: cookieName,
+      customerName: "",
     },
   });
 
-  const quantity = form.watch('quantity');
-
-  const onSubmit = (values: PreOrderFormValues) => {
-    const message = encodeURIComponent(
-      `Halo Nastthara Bites, saya mau pre-order:\n\nNama: ${values.name}\nKue: ${values.cookie}\nJumlah: ${values.quantity} toples\n\nTerima kasih!`
-    );
-    const whatsappUrl = `https://wa.me/6282233676703?text=${message}`;
+  const onSubmit = (values: CartDialogFormValues) => {
+    let message = `Halo Nastthara Bites, saya mau pre-order:\n\n*Nama Pemesan:* ${values.customerName}\n\n*Pesanan:*\n`;
+    cartItems.forEach(item => {
+      message += `- ${item.name} (${item.quantity} toples) - ${formatPrice(item.price * item.quantity)}\n`;
+    });
+    message += `\n*Total Harga:* ${formatPrice(totalPrice)}\n\nTerima kasih!`;
+    
+    const whatsappUrl = `https://wa.me/6282233676703?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     onOpenChange(false);
     form.reset();
+    clearCart();
   };
-  
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-headline text-2xl">Pre-Order {cookieName}</DialogTitle>
+          <DialogTitle className="font-headline text-2xl flex items-center gap-2"><ShoppingCart /> Keranjang Belanja</DialogTitle>
           <DialogDescription>
-            Fill in the details below to place your pre-order. We'll contact you via WhatsApp for confirmation.
+            Periksa pesanan Anda di bawah ini sebelum melanjutkan ke WhatsApp.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Your Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. Budi" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="quantity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Quantity (toples)</FormLabel>
-                   <FormControl>
-                     <div className="flex items-center gap-2">
-                       <Button type="button" variant="outline" size="icon" className="h-8 w-8 shrink-0 rounded-full" onClick={() => form.setValue('quantity', Math.max(1, quantity - 1))} disabled={quantity <= 1}>
-                          <Minus className="h-4 w-4" />
-                          <span className="sr-only">Decrease</span>
-                       </Button>
-                       <Input {...field} type="number" className="w-16 text-center" readOnly />
-                       <Button type="button" variant="outline" size="icon" className="h-8 w-8 shrink-0 rounded-full" onClick={() => form.setValue('quantity', quantity + 1)}>
-                          <Plus className="h-4 w-4" />
-                          <span className="sr-only">Increase</span>
-                       </Button>
-                     </div>
-                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <DialogFooter>
-              <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                Order via WhatsApp
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        {cartItems.length === 0 ? (
+          <div className="py-12 text-center text-muted-foreground">
+            <p>Keranjang Anda masih kosong.</p>
+          </div>
+        ) : (
+          <>
+            <div className="max-h-64 overflow-y-auto pr-4 -mr-4 space-y-4">
+              {cartItems.map(item => (
+                <div key={item.name} className="flex items-center gap-4">
+                  <Image src={item.image} alt={item.name} width={64} height={64} className="rounded-md object-cover" data-ai-hint={item.hint} />
+                  <div className="flex-grow">
+                    <p className="font-semibold">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">{formatPrice(item.price)}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button type="button" variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.name, item.quantity - 1)}>
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span>{item.quantity}</span>
+                    <Button type="button" variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.name, item.quantity + 1)}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <Button type="button" variant="ghost" size="icon" onClick={() => removeFromCart(item.name)} className="text-destructive">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <Separator />
+            <div className="flex justify-between items-center font-bold text-lg">
+              <span>Total:</span>
+              <span>{formatPrice(totalPrice)}</span>
+            </div>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="customerName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nama Anda</FormLabel>
+                      <FormControl>
+                        <Input placeholder="contoh: Budi" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <DialogFooter>
+                  <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                    Checkout via WhatsApp
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
 };
 
+
 const ProductSection: FC = () => {
-  const [isDialogOpen, setDialogOpen] = useState(false);
-  const [selectedCookie, setSelectedCookie] = useState('');
-
-  const handleOrderClick = (cookieName: string) => {
-    setSelectedCookie(cookieName);
-    setDialogOpen(true);
-  };
-
   return (
     <section id="products" className="py-20 px-4 bg-card">
       <div className="container mx-auto">
-        <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-2">Our Signature Cookies</h2>
+        <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-2">Kukis Andalan Kami</h2>
         <p className="text-lg text-center text-muted-foreground mb-12">Fresh from the oven, just for you.</p>
         <Carousel
           opts={{
@@ -240,14 +285,13 @@ const ProductSection: FC = () => {
           <CarouselContent>
             {products.map((product, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-4">
-                <ProductCard product={product} onOrder={() => handleOrderClick(product.name)} />
+                <ProductCard product={product} />
               </CarouselItem>
             ))}
           </CarouselContent>
           <CarouselPrevious className="hidden sm:flex" />
           <CarouselNext className="hidden sm:flex" />
         </Carousel>
-        <PreOrderDialog isOpen={isDialogOpen} onOpenChange={setDialogOpen} cookieName={selectedCookie} />
       </div>
     </section>
   );
@@ -257,21 +301,21 @@ const AboutSection: FC = () => (
   <section className="py-20 px-4">
     <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
       <div className="space-y-4">
-        <h2 className="text-3xl md:text-4xl font-headline font-bold">The Art of Baking</h2>
+        <h2 className="text-3xl md:text-4xl font-headline font-bold">Seni Membuat Kue</h2>
         <p className="text-lg text-muted-foreground">
-          At Nastthara Bites, we believe in the magic of homemade cookies. Each batch is made-to-order (Pre-Order system) to ensure you receive the freshest, most delicious treats. We use only high-quality ingredients without any preservatives.
+          Di Nastthara Bites, kami percaya pada keajaiban kukis buatan sendiri. Setiap batch dibuat berdasarkan pesanan (sistem Pre-Order) untuk memastikan Anda menerima suguhan yang paling segar dan lezat. Kami hanya menggunakan bahan-bahan berkualitas tinggi tanpa bahan pengawet.
         </p>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-lg font-semibold">How to Pre-Order?</AccordionTrigger>
+            <AccordionTrigger className="text-lg font-semibold">Bagaimana Cara Pre-Order?</AccordionTrigger>
             <AccordionContent className="text-base">
-              Simply click the "Pre-Order Now" button on your favorite cookie, fill out the form, and we'll finalize your order via WhatsApp. We bake based on orders to guarantee freshness.
+             Pilih kue favoritmu dan klik "Add to Cart". Setelah selesai memilih, klik ikon keranjang di pojok kanan atas, isi nama Anda, lalu checkout ke WhatsApp. Kami akan segera memproses pesananmu!
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger className="text-lg font-semibold">Our Ingredients</AccordionTrigger>
+            <AccordionTrigger className="text-lg font-semibold">Bahan-Bahan Kami</AccordionTrigger>
             <AccordionContent className="text-base">
-              We are committed to using premium ingredients: pure butter, quality flour, fresh eggs, and real cheese & fruits. No shortcuts, just pure goodness.
+              Kami berkomitmen menggunakan bahan-bahan premium: mentega murni, tepung berkualitas, telur segar, serta keju & buah asli. Tanpa jalan pintas, hanya kebaikan murni.
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -297,8 +341,8 @@ const RecommendationSection: FC = () => (
         <div className="inline-block bg-primary/20 p-3 rounded-full mb-4">
           <ChefHat className="h-8 w-8 text-primary" />
         </div>
-        <h2 className="text-3xl md:text-4xl font-headline font-bold">Can't Decide?</h2>
-        <p className="text-lg text-muted-foreground mt-2">Let our AI chef give you a personalized recommendation!</p>
+        <h2 className="text-3xl md:text-4xl font-headline font-bold">Bingung Mau Pilih yang Mana?</h2>
+        <p className="text-lg text-muted-foreground mt-2">Biar koki AI kami yang kasih rekomendasi personal!</p>
       </div>
       <CookieRecommender />
     </div>
@@ -308,7 +352,7 @@ const RecommendationSection: FC = () => (
 const TestimonialSection: FC = () => (
   <section className="py-20 px-4">
     <div className="container mx-auto">
-      <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">Sweet Words from Our Customers</h2>
+      <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">Kata Manis dari Pelanggan Kami</h2>
       <div className="grid md:grid-cols-3 gap-8">
         {testimonials.map((testimonial, index) => (
           <Card key={index} className="bg-card shadow-lg">
@@ -358,9 +402,11 @@ const Footer: FC = () => (
 );
 
 export default function Home() {
+  const [isCartOpen, setCartOpen] = useState(false);
+
   return (
     <div className="bg-background font-body text-foreground">
-      <Header />
+      <Header onCartClick={() => setCartOpen(true)} />
       <main>
         <HeroSection />
         <ProductSection />
@@ -369,6 +415,7 @@ export default function Home() {
         <TestimonialSection />
       </main>
       <Footer />
+      <CartDialog isOpen={isCartOpen} onOpenChange={setCartOpen} />
     </div>
   );
 }
