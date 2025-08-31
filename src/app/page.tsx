@@ -1,18 +1,18 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, ChevronDown } from 'lucide-react';
+import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductVariant } from '@/types/product';
-import { ShopeeIcon } from '@/components/ui/shopee-icon';
+import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -20,6 +20,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { Textarea } from '@/components/ui/textarea';
 
 
 const products: Product[] = [
@@ -137,11 +138,10 @@ const HalalLogo: FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-
 const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
   const { cartCount } = useCart();
   return (
-    <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b border-border/20">
+    <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
           <Cookie className="h-8 w-8 text-primary group-hover:animate-spin" style={{ animationDuration: '2s' }} />
@@ -176,15 +176,15 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
 const HeroSection: FC = () => (
   <section className="text-center py-20 px-4">
     <div className="container mx-auto">
-      <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary mb-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>A Cookie Made to Feel Like Home</h1>
+      <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>A Cookie Made to Feel Like Home</h1>
       <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
         We built a brand that melts hearts before it melts in your mouth ✨
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '500ms' }}>
-        <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <a href="#products">Order Now</a>
         </Button>
-        <Button asChild size="lg" variant="outline">
+        <Button asChild size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10">
           <a href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer">
             <MessageCircle className="mr-2 h-5 w-5" /> Hubungi Kami
           </a>
@@ -194,13 +194,12 @@ const HeroSection: FC = () => (
   </section>
 );
 
-const ProductCard: FC<{ product: Product }> = ({ product }) => {
+const ProductCard: FC<{ product: Product, onSelect: () => void }> = ({ product, onSelect }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
 
   useEffect(() => {
-    // Reset to the first variant whenever the product prop changes.
     setSelectedVariant(product.variants[0]);
   }, [product]);
 
@@ -213,14 +212,14 @@ const ProductCard: FC<{ product: Product }> = ({ product }) => {
   };
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg hover:shadow-primary/20">
+    <Card className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg hover:shadow-primary/20 bg-card">
       <CardHeader className="p-0 relative">
          {product.bestseller && (
           <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-bold py-1 px-3 rounded-full z-10 animate-pulse">
             Bestseller 💛
           </div>
         )}
-        <div className="aspect-video overflow-hidden">
+        <button onClick={onSelect} className="aspect-video overflow-hidden w-full cursor-pointer">
           <Image
             src={product.image}
             alt={product.name}
@@ -229,11 +228,11 @@ const ProductCard: FC<{ product: Product }> = ({ product }) => {
             data-ai-hint={product.hint}
             className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out"
           />
-        </div>
+        </button>
       </CardHeader>
       <CardContent className="p-6 flex-grow flex flex-col">
         <CardTitle className="font-headline text-2xl mb-2">{product.name}</CardTitle>
-        <p className="font-semibold text-lg text-primary mb-2">{formatPrice(selectedVariant.price)}</p>
+        <p className="font-semibold text-lg text-accent mb-2">{formatPrice(selectedVariant.price)}</p>
         <CardDescription className="text-base text-muted-foreground flex-grow mb-4">{product.description}</CardDescription>
         
         {product.variants.length > 1 && (
@@ -258,8 +257,7 @@ const ProductCard: FC<{ product: Product }> = ({ product }) => {
                 </Select>
             </div>
         )}
-
-        <Button onClick={handleAddToCart} className="w-full mt-auto bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 transform group-hover:-translate-y-1">
+        <Button onClick={handleAddToCart} className="w-full mt-auto bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 transform group-hover:-translate-y-1">
           <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
         </Button>
       </CardContent>
@@ -293,7 +291,7 @@ const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg bg-card">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center gap-2"><ShoppingCart /> Keranjang Belanja</DialogTitle>
           <DialogDescription>
@@ -364,14 +362,13 @@ const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }
   );
 };
 
-
-const ProductSection: FC = () => {
+const ProductSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
   return (
-    <section id="products" className="py-20 px-4 bg-card">
+    <section id="products" className="py-20 px-4 bg-card/80">
       <div className="container mx-auto">
         <div className="flex justify-center items-center gap-4 mb-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Delights</h2>
-            <div className="flex items-center gap-2 bg-white p-2 rounded-md shadow-sm">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold text-accent">Our Delights</h2>
+            <div className="flex items-center gap-2 bg-background p-2 rounded-md shadow-sm">
                 <HalalLogo className="h-10 w-10" />
                  <p className="text-xs text-green-700 font-semibold leading-tight">TERSERTIFIKASI<br/>HALAL<br/>INDONESIA</p>
             </div>
@@ -379,7 +376,7 @@ const ProductSection: FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => (
                 <div key={index} className="animate-fade-in-up" style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'both' }}>
-                  <ProductCard product={product} />
+                  <ProductCard product={product} onSelect={() => onProductSelect(product)} />
                 </div>
             ))}
         </div>
@@ -391,7 +388,7 @@ const ProductSection: FC = () => {
 const AboutSection: FC = () => (
   <section className="py-20 px-4">
     <div className="container mx-auto max-w-4xl text-center">
-        <h2 className="text-3xl md:text-4xl font-headline font-bold mb-4">Our Story, Your Comfort</h2>
+        <h2 className="text-3xl md:text-4xl font-headline font-bold text-accent mb-4">Our Story, Your Comfort</h2>
         <p className="text-lg text-muted-foreground mb-6">
           Di balik setiap toples Nasthara, ada dapur kecil yang selalu hangat. Di sanalah semuanya dimulai — bukan dari pabrik besar, tapi dari resep warisan keluarga, tangan ibu, dan cinta yang tak pernah ditakar.
         </p>
@@ -405,11 +402,10 @@ const AboutSection: FC = () => (
   </section>
 );
 
-
 const TestimonialSection: FC = () => (
-  <section className="py-20 px-4 bg-card">
+  <section className="py-20 px-4 bg-card/80">
     <div className="container mx-auto">
-      <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">What Our Family Says</h2>
+      <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12 text-accent">What Our Family Says</h2>
       <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         {testimonials.map((testimonial, index) => (
           <Card key={index} className="bg-background shadow-lg text-center transform hover:-translate-y-2 transition-transform duration-300">
@@ -436,7 +432,7 @@ const SeasonalSection: FC = () => (
   <section className="py-20 px-4">
      <div className="container mx-auto text-center max-w-3xl">
         <h3 className="text-2xl font-bold text-primary mb-2">Seasonal Only!</h3>
-        <h2 className="text-3xl md:text-4xl font-headline font-bold mb-4">Homemade with care, released in limited batches</h2>
+        <h2 className="text-3xl md:text-4xl font-headline font-bold text-accent mb-4">Homemade with care, released in limited batches</h2>
         <p className="text-lg text-muted-foreground mb-8">
           To preserve the flavor, freshness, and the feeling — each Nasthara batch is made in small quantities. Secure yours through pre-order. We only bake what we can lovefully deliver.
         </p>
@@ -444,9 +440,9 @@ const SeasonalSection: FC = () => (
           <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
             <a href="#products">Order Before It’s Gone</a>
           </Button>
-          <Button asChild size="lg" variant="outline">
+          <Button asChild size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10">
             <a href="https://shopee.co.id/nasthar_a" target="_blank" rel="noopener noreferrer">
-             <ShopeeIcon className="mr-2 h-5 w-5" /> Belanja di Shopee
+              Belanja di Shopee
             </a>
           </Button>
         </div>
@@ -456,10 +452,10 @@ const SeasonalSection: FC = () => (
 
 const MidCtaSection: FC = () => (
    <section className="py-10 px-4">
-    <div className="container mx-auto text-center">
-       <div className="grid md:grid-cols-2 gap-12 items-center bg-card p-10 rounded-lg">
+    <div className="container mx-auto">
+       <div className="grid md:grid-cols-2 gap-12 items-center bg-card/80 p-10 rounded-2xl shadow-lg">
         <div className="order-2 md:order-1 text-left">
-          <h2 className="text-3xl md:text-4xl font-headline font-bold mb-4">More Than Just Cookies.</h2>
+          <h2 className="text-3xl md:text-4xl font-headline font-bold text-accent mb-4">More Than Just Cookies.</h2>
           <p className="text-2xl text-muted-foreground italic mb-6">It’s a Memory in Every Bite.</p>
           <p className="text-lg text-foreground">
            Kami percaya, rasa yang paling berkesan bukan hanya tentang bahan-bahan terbaik, tapi juga sentuhan hati yang merangkainya. Kue kami bisa sama dengan yang lain, tapi sentuhan tangan yang membuatnya, itu yang membedakan.
@@ -480,9 +476,200 @@ const MidCtaSection: FC = () => (
   </section>
 );
 
+const RecommendationFormSchema = z.object({
+  preference: z.string().min(5, { message: "Ceritakan sedikit preferensi Anda (min. 5 karakter)." }),
+});
+type RecommendationFormValues = z.infer<typeof RecommendationFormSchema>;
+
+const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [recommendation, setRecommendation] = useState<{name: string, reason: string} | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const resultRef = useRef<HTMLDivElement>(null);
+    
+    const form = useForm<RecommendationFormValues>({
+        resolver: zodResolver(RecommendationFormSchema),
+        defaultValues: {
+            preference: "",
+        },
+    });
+
+    const onSubmit = async (values: RecommendationFormValues) => {
+        setIsLoading(true);
+        setRecommendation(null);
+        setError(null);
+        try {
+            const result = await recommendCookie(values.preference);
+            setRecommendation(result);
+        } catch (e) {
+            setError("Maaf, terjadi kesalahan saat membuat rekomendasi. Coba lagi nanti.");
+            console.error(e);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    useEffect(() => {
+        if (recommendation && resultRef.current) {
+            resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [recommendation]);
+    
+    const recommendedProduct = products.find(p => p.name.toLowerCase() === recommendation?.name.toLowerCase());
+
+    return (
+        <section className="py-20 px-4 bg-baking-pattern">
+            <div className="container mx-auto max-w-2xl">
+                <Card className="p-8 shadow-2xl bg-card/95 backdrop-blur-sm">
+                    <CardHeader className="text-center p-0 mb-6">
+                        <Wand2 className="mx-auto h-10 w-10 text-primary mb-4" />
+                        <CardTitle className="text-3xl font-headline text-accent">Not Sure What to Choose?</CardTitle>
+                        <CardDescription className="text-lg">Let our AI find the perfect cookie for you!</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                         <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                                <FormField
+                                control={form.control}
+                                name="preference"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Tell us what you like</FormLabel>
+                                    <FormControl>
+                                        <Textarea placeholder="e.g. 'Saya suka kue yang tidak terlalu manis, gurih, dan ada kejunya.' atau 'Cari yang paling cocok untuk teman minum teh.'" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                                <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                                    {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Finding your soul-cookie...</> : "Get Recommendation"}
+                                </Button>
+                            </form>
+                        </Form>
+
+                        {error && <p className="text-destructive mt-4 text-center">{error}</p>}
+
+                        {recommendation && recommendedProduct && (
+                            <div ref={resultRef} className="mt-8 text-center animate-in fade-in-up">
+                                <Separator className="my-6"/>
+                                <h3 className="text-2xl font-headline font-bold text-accent mb-4">Our Recommendation For You!</h3>
+                                <Card className="overflow-hidden">
+                                     <Image
+                                        src={recommendedProduct.image}
+                                        alt={recommendedProduct.name}
+                                        width={600}
+                                        height={300}
+                                        data-ai-hint={recommendedProduct.hint}
+                                        className="object-cover w-full h-48"
+                                    />
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center justify-center gap-2 text-2xl font-headline">
+                                            <Sparkles className="h-6 w-6 text-primary"/> {recommendation.name}
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-muted-foreground italic mb-4">"{recommendation.reason}"</p>
+                                        <Button onClick={() => onProductSelect(recommendedProduct)} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                                          View Product
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+        </section>
+    );
+};
+
+const ProductDetailDialog: FC<{
+  product: Product | null;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}> = ({ product, isOpen, onOpenChange }) => {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
+
+  useEffect(() => {
+    if (product) {
+      setSelectedVariant(product.variants[0]);
+    }
+  }, [product]);
+  
+  if (!product || !selectedVariant) return null;
+
+  const handleAddToCart = () => {
+    addToCart(product, selectedVariant);
+    toast({
+      title: "Berhasil!",
+      description: `${product.name} (${selectedVariant.size}) telah ditambahkan ke keranjang.`,
+    });
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-3xl grid-cols-1 md:grid-cols-2 grid gap-8 p-0 bg-card">
+        <div className="p-0">
+           <Image
+            src={product.image}
+            alt={product.name}
+            width={800}
+            height={800}
+            data-ai-hint={product.hint}
+            className="object-cover w-full h-full rounded-l-lg"
+          />
+        </div>
+        <div className="p-8 flex flex-col">
+          <DialogHeader className="text-left">
+            <DialogTitle className="font-headline text-3xl mb-2 text-accent">{product.name}</DialogTitle>
+            <DialogDescription className="text-base">
+              {product.description}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex-grow my-6">
+            <p className="text-3xl font-bold text-primary mb-4">{formatPrice(selectedVariant.price)}</p>
+             {product.variants.length > 1 && (
+                <div className="mb-4">
+                    <FormLabel>Ukuran</FormLabel>
+                    <Select
+                        value={selectedVariant.size}
+                        onValueChange={(size) => {
+                            const newVariant = product.variants.find(v => v.size === size);
+                            if(newVariant) setSelectedVariant(newVariant);
+                        }}
+                    >
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Pilih ukuran" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {product.variants.map((variant) => (
+                                <SelectItem key={variant.size} value={variant.size}>
+                                    {variant.size} - {formatPrice(variant.price)}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+            )}
+          </div>
+          <DialogFooter>
+             <Button onClick={handleAddToCart} size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+            </Button>
+          </DialogFooter>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 
 const Footer: FC = () => (
-  <footer className="bg-card py-12 px-4 mt-20">
+  <footer className="bg-card/80 py-12 px-4 mt-20">
     <div className="container mx-auto text-center text-muted-foreground">
       <div className="flex items-center justify-center gap-2 mb-4">
         <Cookie className="h-8 w-8 text-primary" />
@@ -515,6 +702,13 @@ const Footer: FC = () => (
 
 export default function Home() {
   const [isCartOpen, setCartOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isProductDetailOpen, setProductDetailOpen] = useState(false);
+
+  const handleProductSelect = (product: Product) => {
+    setSelectedProduct(product);
+    setProductDetailOpen(true);
+  }
 
   return (
     <div className="bg-background font-body text-foreground">
@@ -522,13 +716,19 @@ export default function Home() {
       <main>
         <HeroSection />
         <AboutSection />
-        <ProductSection />
+        <ProductSection onProductSelect={handleProductSelect} />
         <MidCtaSection />
+        <AIRecommenderSection onProductSelect={handleProductSelect} />
         <TestimonialSection />
         <SeasonalSection/>
       </main>
       <Footer />
       <CartDialog isOpen={isCartOpen} onOpenChange={setCartOpen} />
+      <ProductDetailDialog 
+        product={selectedProduct}
+        isOpen={isProductDetailOpen}
+        onOpenChange={setProductDetailOpen}
+      />
     </div>
   );
 }
