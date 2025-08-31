@@ -5,4 +5,5 @@ export interface Product {
   image: string;
   hint: string;
   price: number;
+  bestseller?: boolean;
 }

@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { CartProvider } from '@/contexts/CartContext';
 
 export const metadata: Metadata = {
-  title: 'Nasthara',
-  description: 'Freshly baked cookies, made with love.',
+  title: 'Nasthara - A Cookie Made to Feel Like Home',
+  description: 'Homemade cookies, baked with love. Nasthara brings the taste of home to you, one bite at a time.',
 };
 
 export default function RootLayout({

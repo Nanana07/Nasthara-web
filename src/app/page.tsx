@@ -6,68 +6,80 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, MessageCircle, Cookie, Wheat, ChefHat, Star, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product } from '@/types/product';
+import { ShopeeIcon } from '@/components/ui/shopee-icon';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import CookieRecommender from '@/components/cookie-recommender';
 import { useToast } from '@/hooks/use-toast';
 
 const products: Product[] = [
   {
     name: 'Nastar',
-    description: 'Classic pineapple tarts with a buttery, melt-in-your-mouth crust.',
+    description: 'Reminds you of: Kumpul keluarga di ruang tamu nenek, aroma manis mentega dan nanas.',
     image: 'https://picsum.photos/600/400',
     hint: 'nastar cookie',
     price: 100000,
+    bestseller: true,
+  },
+  {
+    name: 'Palm Cheese',
+    description: 'Reminds you of: Keju gurih berpadu manisnya gula aren, kelezatan yang tak terduga.',
+    image: 'https://picsum.photos/600/400',
+    hint: 'palm cheese cookie',
+    price: 90000,
   },
   {
     name: 'Lidah Kucing',
-    description: 'Thin, crispy, and light cookies, perfect with a cup of tea or coffee.',
+    description: 'Reminds you of: Obrolan ringan ditemani secangkir teh hangat, kebahagiaan yang renyah.',
     image: 'https://picsum.photos/600/400',
     hint: 'cat tongue cookie',
     price: 85000,
   },
   {
+    name: 'Kastengel Premium',
+    description: 'Reminds you of: Keju melimpah dan renyahnya kebersamaan, tradisi yang selalu dinanti.',
+    image: 'https://picsum.photos/600/400',
+    hint: 'kaasstengels cheese',
+    price: 95000,
+  },
+  {
     name: 'Choco Mede',
-    description: 'Rich chocolate cookies packed with crunchy cashew nuts.',
+    description: 'Reminds you of: Petualangan rasa baru di setiap gigitan, kejutan di tengah kesederhanaan.',
     image: 'https://picsum.photos/600/400',
     hint: 'chocolate cashew cookie',
     price: 95000,
   },
   {
-    name: 'Kastengel',
-    description: 'Savory cheese sticks with a satisfying crunch and rich cheesy flavor.',
+    name: 'Bawang Gunting',
+    description: 'Reminds you of: Camilan renyah di sore hari, teman setia saat santai bersama keluarga.',
     image: 'https://picsum.photos/600/400',
-    hint: 'cheese cookie',
-    price: 90000,
+    hint: 'savory snack',
+    price: 75000,
   },
 ];
 
 const testimonials = [
   {
-    name: 'Andi',
-    quote: 'The Nastar is just like my grandma used to make! So delicious and brings back so many memories. Will definitely order again.',
+    name: 'Sarah K.',
+    quote: "Nasthara benar-benar membawa pulang rasa Lebaran! Nastarnya meleleh di lidah, persis kayak buatan Ibu.",
     stars: 5,
   },
   {
-    name: 'Bunga',
-    quote: 'I ordered the Choco Mede for a family gathering and everyone loved it. The combination of chocolate and cashew is perfect!',
+    name: 'Budi A.',
+    quote: "Cokelat medenya juara! Pengiriman cepat dan packaging-nya premium banget. Bakal repeat order!",
     stars: 5,
   },
   {
-    name: 'Citra',
-    quote: 'Lidah Kucingnya renyah banget! Ga kemanisan, pas buat temen ngeteh sore-sore. Recommended!',
-    stars: 4,
+    name: 'Dewi R.',
+    quote: "Setiap gigitan lidah kucingnya bikin nostalgia masa kecil. Ini bukan cuma kue, tapi mesin waktu!",
+    stars: 5,
   },
 ];
 
@@ -94,7 +106,7 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
           <Cookie className="h-8 w-8 text-primary" />
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
-        <nav className="flex items-center gap-2">
+        <nav className="flex items-center gap-1 sm:gap-2">
           <Button variant="ghost" size="icon" onClick={onCartClick} className="relative">
             <ShoppingCart className="h-6 w-6 text-accent" />
             {cartCount > 0 && (
@@ -104,6 +116,11 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
             )}
             <span className="sr-only">Keranjang Belanja</span>
           </Button>
+          <Link href="https://shopee.co.id" target="_blank" rel="noopener noreferrer" aria-label="Shopee">
+            <Button variant="ghost" size="icon">
+              <ShopeeIcon className="h-6 w-6 text-accent" />
+            </Button>
+          </Link>
           <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <Button variant="ghost" size="icon">
               <Instagram className="h-6 w-6 text-accent" />
@@ -123,13 +140,20 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
 const HeroSection: FC = () => (
   <section className="text-center py-20 px-4">
     <div className="container mx-auto">
-      <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary mb-4">Freshly Baked with Love</h1>
+      <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary mb-4">A Cookie Made to Feel Like Home</h1>
       <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground mb-8">
-        Temukan cita rasa rumahan dalam kukis artisanal kami, dibuat dari bahan-bahan terbaik dan dipanggang dengan sempurna khusus untuk Anda.
+        We built a brand that melts hearts before it melts in your mouth ✨
       </p>
-      <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-        <a href="#products">Pesan Sekarang</a>
-      </Button>
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+          <a href="#products">Order Now</a>
+        </Button>
+        <Button asChild size="lg" variant="outline">
+          <a href="https://shopee.co.id" target="_blank" rel="noopener noreferrer">
+            <ShopeeIcon className="mr-2 h-5 w-5" /> Order via Shopee
+          </a>
+        </Button>
+      </div>
     </div>
   </section>
 );
@@ -148,7 +172,12 @@ const ProductCard: FC<{ product: Product }> = ({ product }) => {
 
   return (
     <Card className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg">
-      <CardHeader className="p-0">
+      <CardHeader className="p-0 relative">
+         {product.bestseller && (
+          <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-bold py-1 px-3 rounded-full z-10">
+            Bestseller 💛
+          </div>
+        )}
         <div className="aspect-video overflow-hidden">
           <Image
             src={product.image}
@@ -273,25 +302,12 @@ const ProductSection: FC = () => {
   return (
     <section id="products" className="py-20 px-4 bg-card">
       <div className="container mx-auto">
-        <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-2">Kukis Andalan Kami</h2>
-        <p className="text-lg text-center text-muted-foreground mb-12">Fresh from the oven, just for you.</p>
-        <Carousel
-          opts={{
-            align: 'start',
-            loop: true,
-          }}
-          className="w-full"
-        >
-          <CarouselContent>
+        <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">Our Delights</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => (
-              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-4">
-                <ProductCard product={product} />
-              </CarouselItem>
+                <ProductCard key={index} product={product} />
             ))}
-          </CarouselContent>
-          <CarouselPrevious className="hidden sm:flex" />
-          <CarouselNext className="hidden sm:flex" />
-        </Carousel>
+        </div>
       </div>
     </section>
   );
@@ -299,74 +315,40 @@ const ProductSection: FC = () => {
 
 const AboutSection: FC = () => (
   <section className="py-20 px-4">
-    <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-      <div className="space-y-4">
-        <h2 className="text-3xl md:text-4xl font-headline font-bold">Seni Membuat Kue</h2>
-        <p className="text-lg text-muted-foreground">
-          Di Nasthara, kami percaya pada keajaiban kukis buatan sendiri. Setiap batch dibuat berdasarkan pesanan (sistem Pre-Order) untuk memastikan Anda menerima suguhan yang paling segar dan lezat. Kami hanya menggunakan bahan-bahan berkualitas tinggi tanpa bahan pengawet.
+    <div className="container mx-auto max-w-4xl text-center">
+        <h2 className="text-3xl md:text-4xl font-headline font-bold mb-4">Our Story, Your Comfort</h2>
+        <p className="text-lg text-muted-foreground mb-6">
+          Di balik setiap toples Nasthara, ada dapur kecil yang selalu hangat. Di sanalah semuanya dimulai — bukan dari pabrik besar, tapi dari resep warisan keluarga, tangan ibu, dan cinta yang tak pernah ditakar.
         </p>
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="text-lg font-semibold">Bagaimana Cara Pre-Order?</AccordionTrigger>
-            <AccordionContent className="text-base">
-             Pilih kue favoritmu dan klik "Add to Cart". Setelah selesai memilih, klik ikon keranjang di pojok kanan atas, isi nama Anda, lalu checkout ke WhatsApp. Kami akan segera memproses pesananmu!
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger className="text-lg font-semibold">Bahan-Bahan Kami</AccordionTrigger>
-            <AccordionContent className="text-base">
-              Kami berkomitmen menggunakan bahan-bahan premium: mentega murni, tepung berkualitas, telur segar, serta keju & buah asli. Tanpa jalan pintas, hanya kebaikan murni.
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
-      <div>
-        <Image
-          src="https://picsum.photos/800/600"
-          alt="Baking process"
-          width={800}
-          height={600}
-          data-ai-hint="baking cookies"
-          className="rounded-lg shadow-lg"
-        />
-      </div>
+        <p className="text-lg text-muted-foreground mb-8">
+          Kami percaya, makanan terenak bukan yang paling mahal. Tapi yang bisa bikin kamu merasa pulang, meski sedang jauh dari rumah. Karena itu, setiap kue di Nasthara dibuat dengan dua bahan utama: rasa sayang dan kenangan 🤎
+        </p>
+        <p className="text-xl font-semibold text-foreground italic border-l-4 border-primary pl-4">
+          “Nasthara hadir bukan untuk sekadar memenuhi toples di meja tamu. Tapi untuk mengisi ruang rindu.”
+        </p>
     </div>
   </section>
 );
 
-const RecommendationSection: FC = () => (
-  <section className="py-20 px-4 bg-card">
-    <div className="container mx-auto">
-      <div className="text-center mb-12">
-        <div className="inline-block bg-primary/20 p-3 rounded-full mb-4">
-          <ChefHat className="h-8 w-8 text-primary" />
-        </div>
-        <h2 className="text-3xl md:text-4xl font-headline font-bold">Bingung Mau Pilih yang Mana?</h2>
-        <p className="text-lg text-muted-foreground mt-2">Biar koki AI kami yang kasih rekomendasi personal!</p>
-      </div>
-      <CookieRecommender />
-    </div>
-  </section>
-);
 
 const TestimonialSection: FC = () => (
-  <section className="py-20 px-4">
+  <section className="py-20 px-4 bg-card">
     <div className="container mx-auto">
-      <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">Kata Manis dari Pelanggan Kami</h2>
-      <div className="grid md:grid-cols-3 gap-8">
+      <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">What Our Family Says</h2>
+      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         {testimonials.map((testimonial, index) => (
-          <Card key={index} className="bg-card shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex gap-1 mb-2">
+          <Card key={index} className="bg-background shadow-lg text-center">
+            <CardContent className="p-8 flex flex-col items-center">
+               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.stars)].map((_, i) => (
-                  <Star key={i} className="text-primary fill-primary" />
+                  <Star key={i} className="text-primary fill-primary h-5 w-5" />
                 ))}
                 {[...Array(5 - testimonial.stars)].map((_, i) => (
-                  <Star key={i} className="text-primary" />
+                  <Star key={i} className="text-primary h-5 w-5" />
                 ))}
               </div>
               <p className="text-muted-foreground mb-4">"{testimonial.quote}"</p>
-              <p className="font-bold text-right">- {testimonial.name}</p>
+              <p className="font-bold">- {testimonial.name}</p>
             </CardContent>
           </Card>
         ))}
@@ -375,28 +357,83 @@ const TestimonialSection: FC = () => (
   </section>
 );
 
-const Footer: FC = () => (
-  <footer className="bg-card py-8 px-4">
+const SeasonalSection: FC = () => (
+  <section className="py-20 px-4">
+     <div className="container mx-auto text-center max-w-3xl">
+        <h3 className="text-2xl font-bold text-primary mb-2">Seasonal Only!</h3>
+        <h2 className="text-3xl md:text-4xl font-headline font-bold mb-4">Homemade with care, released in limited batches</h2>
+        <p className="text-lg text-muted-foreground mb-8">
+          To preserve the flavor, freshness, and the feeling — each Nasthara batch is made in small quantities. Secure yours through pre-order. We only bake what we can lovefully deliver.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+            <a href="#products">Order Before It’s Gone</a>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <a href="https://shopee.co.id" target="_blank" rel="noopener noreferrer">
+             <ShopeeIcon className="mr-2 h-5 w-5" /> Belanja di Shopee
+            </a>
+          </Button>
+        </div>
+    </div>
+  </section>
+);
+
+const MidCtaSection: FC = () => (
+   <section className="py-10 px-4">
     <div className="container mx-auto text-center">
+       <div className="grid md:grid-cols-2 gap-12 items-center bg-card p-10 rounded-lg">
+        <div className="order-2 md:order-1 text-left">
+          <h2 className="text-3xl md:text-4xl font-headline font-bold mb-4">More Than Just Cookies.</h2>
+          <p className="text-2xl text-muted-foreground italic mb-6">It’s a Memory in Every Bite.</p>
+          <p className="text-lg text-foreground">
+           Kami percaya, rasa yang paling berkesan bukan hanya tentang bahan-bahan terbaik, tapi juga sentuhan hati yang merangkainya. Kue kami bisa sama dengan yang lain, tapi sentuhan tangan yang membuatnya, itu yang membedakan.
+          </p>
+        </div>
+        <div className="order-1 md:order-2">
+            <Image
+              src="https://picsum.photos/800/600"
+              alt="Close up of a cookie"
+              width={800}
+              height={600}
+              data-ai-hint="cookie texture"
+              className="rounded-lg shadow-lg"
+            />
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+
+const Footer: FC = () => (
+  <footer className="bg-card py-12 px-4 mt-20">
+    <div className="container mx-auto text-center text-muted-foreground">
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Cookie className="h-6 w-6 text-primary" />
-        <span className="text-xl font-bold font-headline text-foreground">Nasthara</span>
+        <Cookie className="h-8 w-8 text-primary" />
+        <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
       </div>
-      <p className="text-muted-foreground mb-4">Fresh from the oven, just for you.</p>
-      <div className="flex justify-center gap-4 mb-4">
-        <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-          <Button variant="outline" size="icon" className="bg-background">
-            <Instagram className="h-5 w-5 text-accent" />
+      <p className="text-lg italic mb-6">“Because every home has a taste. And that taste is Nasthara.”</p>
+      <div className="mb-6">
+        <p className="font-semibold text-foreground mb-2">Connect With Us</p>
+        <div className="flex justify-center gap-2">
+           <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
+            <Link href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer">WhatsApp</Link>
           </Button>
-        </Link>
-        <Link href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-          <Button variant="outline" size="icon" className="bg-background">
-            <MessageCircle className="h-5 w-5 text-accent" />
+          <Separator orientation="vertical" className="h-6" />
+          <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
+            <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer">Instagram</Link>
           </Button>
-        </Link>
+           <Separator orientation="vertical" className="h-6" />
+          <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
+            <Link href="https://shopee.co.id" target="_blank" rel="noopener noreferrer">Shopee</Link>
+          </Button>
+        </div>
       </div>
-      <Separator className="my-4 w-1/4 mx-auto" />
-      <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Nasthara. All rights reserved.</p>
+      <p className="text-sm mb-4">Since 2022, Made by Order (PO)</p>
+      <p className="text-sm mb-6">Handmade in Indonesia — from our kitchen to your heart.</p>
+      
+      <p className="text-xs">&copy; {new Date().getFullYear()} Nasthara. All rights reserved.</p>
     </div>
   </footer>
 );
@@ -409,10 +446,11 @@ export default function Home() {
       <Header onCartClick={() => setCartOpen(true)} />
       <main>
         <HeroSection />
-        <ProductSection />
         <AboutSection />
-        <RecommendationSection />
+        <ProductSection />
+        <MidCtaSection />
         <TestimonialSection />
+        <SeasonalSection/>
       </main>
       <Footer />
       <CartDialog isOpen={isCartOpen} onOpenChange={setCartOpen} />
