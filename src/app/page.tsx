@@ -26,7 +26,7 @@ import { Textarea } from '@/components/ui/textarea';
 const products: Product[] = [
     {
         name: 'Nastar',
-        description: 'Reminds you of: Kumpul keluarga di ruang tamu nenek, aroma manis mentega dan nanas.',
+        description: 'Sehangat kumpul keluarga di ruang tamu nenek, dengan aroma manis mentega dan nanas.',
         image: 'https://picsum.photos/600/400',
         hint: 'nastar cookie',
         bestseller: true,
@@ -37,7 +37,7 @@ const products: Product[] = [
     },
     {
         name: 'Palm Cheese',
-        description: 'Reminds you of: Keju gurih berpadu manisnya gula aren, kelezatan yang tak terduga.',
+        description: 'Saat keju gurih berpadu dengan manisnya gula aren, menciptakan kelezatan tak terduga.',
         image: 'https://picsum.photos/600/400',
         hint: 'palm cheese cookie',
         variants: [
@@ -47,7 +47,7 @@ const products: Product[] = [
     },
     {
         name: 'Lidah Kucing',
-        description: 'Reminds you of: Obrolan ringan ditemani secangkir teh hangat, kebahagiaan yang renyah.',
+        description: 'Untuk obrolan ringan ditemani secangkir teh hangat dan kebahagiaan yang renyah.',
         image: 'https://picsum.photos/600/400',
         hint: 'cat tongue cookie',
         bestseller: true,
@@ -57,7 +57,7 @@ const products: Product[] = [
     },
     {
         name: 'Kastengel Premium',
-        description: 'Reminds you of: Keju melimpah dan renyahnya kebersamaan, tradisi yang selalu dinanti.',
+        description: 'Renyahnya kebersamaan dalam tradisi yang selalu dinanti, dengan rasa keju yang melimpah.',
         image: 'https://picsum.photos/600/400',
         hint: 'kaasstengels cheese',
         variants: [
@@ -66,7 +66,7 @@ const products: Product[] = [
     },
     {
         name: 'Choco Mede',
-        description: 'Reminds you of: Petualangan rasa baru di setiap gigitan, kejutan di tengah kesederhanaan.',
+        description: 'Petualangan rasa baru di setiap gigitan, sebuah kejutan di tengah kesederhanaan.',
         image: 'https://picsum.photos/600/400',
         hint: 'chocolate cashew cookie',
         variants: [
@@ -76,7 +76,7 @@ const products: Product[] = [
     },
     {
         name: 'Bawang Gunting',
-        description: 'Reminds you of: Camilan renyah di sore hari, teman setia saat santai bersama keluarga.',
+        description: 'Camilan renyah di sore hari, teman setia saat santai bersama keluarga tercinta.',
         image: 'https://picsum.photos/600/400',
         hint: 'savory snack',
         variants: [
@@ -544,7 +544,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
                                 />
                                 <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                                     {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Finding your soul-cookie...</> : "Get Recommendation"}
-                                </Button>
+                                 </Button>
                             </form>
                         </Form>
 
@@ -732,3 +732,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
