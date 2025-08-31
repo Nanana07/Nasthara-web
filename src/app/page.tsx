@@ -194,9 +194,9 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem asChild>
-                  <Link href="/blog">
+                  <Link href="/recipes">
                     <BookHeart className="mr-2 h-4 w-4" />
-                    <span>Blog</span>
+                    <span>Resep</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
@@ -242,7 +242,7 @@ const HeroSection: FC = () => (
           </a>
         </Button>
         <Button asChild size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10">
-          <a href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer">
+          <a href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer" className="flex items-center">
              <Image src="/whatsapp.png" alt="WhatsApp Icon" width={20} height={20} className="mr-2" /> Hubungi Kami
           </a>
         </Button>
@@ -1036,7 +1036,7 @@ const Footer: FC = () => (
         <p className="font-semibold text-foreground mb-2">Connect With Us</p>
         <div className="flex justify-center gap-2">
            <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
-            <Link href="/blog">Blog</Link>
+            <Link href="/recipes">Resep</Link>
           </Button>
           <Separator orientation="vertical" className="h-6" />
            <Button asChild variant="link" className="text-muted-foreground hover:text-primary">

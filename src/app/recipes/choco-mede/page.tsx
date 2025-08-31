@@ -1,26 +1,27 @@
+
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Cookie, Printer, ShoppingCart, ChefHat, CheckCircle2, Home, BookHeart } from 'lucide-react';
+import { Printer, ShoppingCart, CheckCircle2, Home, BookHeart, Heart, Instagram } from 'lucide-react';
 import type { Product } from '@/types/product';
 import { Logo } from '@/components/Logo';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const product: Product = {
-    name: 'Palm Cheese',
+    name: 'Choco Mede',
     flavors: [{
         name: 'Original',
-        description: 'Saat keju gurih berpadu dengan manisnya gula aren, menciptakan kelezatan tak terduga.',
-        image: '/palm_cheese.png',
-        hint: 'palm cheese cookie',
+        description: 'Petualangan rasa baru di setiap gigitan, sebuah kejutan di tengah kesederhanaan.',
+        image: '/choco_mede.png',
+        hint: 'chocolate cashew cookie',
         sizes: [
-            { size: '330 ml', price: 27000 },
-            { size: '500 ml', price: 35000 },
-            { size: '750 ml', price: 45000 },
-            { size: '1000 ml', price: 50000 },
-            { size: '1 kg', price: 80000 },
+            { size: '330 ml', price: 40000 },
+            { size: '500 ml', price: 55000 },
+            { size: '750 ml', price: 65000 },
+            { size: '1000 ml', price: 70000 },
         ],
     }]
 };
@@ -35,24 +36,39 @@ const formatPrice = (price: number) => {
 
 const Header = () => (
   <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
-      <div className="container mx-auto flex items-center justify-between">
+      <div className="container mx-auto flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 group">
           <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
-          <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
+          <span className="text-xl sm:text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
-        <nav className="flex items-center gap-2 sm:gap-4">
+        <nav className="flex items-center shrink-0">
             <Button variant="ghost" asChild>
                 <Link href="/">
-                    <Home className="h-5 w-5 mr-2" />
+                    <Home className="h-5 w-5 sm:mr-2" />
                     <span className="hidden sm:inline">Home</span>
                 </Link>
             </Button>
-            <Button variant="ghost" asChild>
-                <Link href="/blog">
-                     <BookHeart className="h-5 w-5 mr-2" />
-                    <span className="hidden sm:inline">Blog</span>
-                </Link>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="group">
+                  <Heart className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link href="/recipes">
+                    <BookHeart className="mr-2 h-4 w-4" />
+                    <span>Resep</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer">
+                    <Instagram className="mr-2 h-4 w-4" />
+                    <span>Instagram</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
         </nav>
       </div>
     </header>
@@ -71,7 +87,7 @@ const Footer: React.FC = () => (
   </footer>
 );
 
-export default function PalmCheeseRecipePage() {
+export default function ChocoMedeRecipePage() {
     const handlePrint = () => {
         window.print();
     };
@@ -83,20 +99,20 @@ export default function PalmCheeseRecipePage() {
         <div className="max-w-4xl mx-auto">
           <article>
             <header className="mb-8 text-center">
-              <p className="text-primary font-semibold mb-2">Blog Internal Dapur Nasthara</p>
-              <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Palm Cheese Cookies</h1>
+              <p className="text-primary font-semibold mb-2">Buku Resep Nasthara</p>
+              <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Choco Mede Cookies</h1>
               <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
-                Kue kering dengan perpaduan rasa manis gula palem dan gurihnya keju yang unik, menciptakan sensasi rasa yang tak terlupakan.
+                Kombinasi sempurna antara cokelat yang kaya rasa dan kacang mede yang renyah. Kue kering favorit semua orang!
               </p>
             </header>
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/palm_cheese.png"
-                alt="Palm Cheese Cookies"
+                src="/choco_mede.png"
+                alt="Choco Mede Cookies"
                 width={1200}
                 height={600}
-                data-ai-hint="palm cheese cookies"
+                data-ai-hint="chocolate cashew cookies"
                 className="w-full object-cover"
               />
             </div>
@@ -105,26 +121,16 @@ export default function PalmCheeseRecipePage() {
                 <div className="md:col-span-2">
                     <section className="mb-8">
                         <h2 className="text-2xl font-headline font-bold text-accent mb-4">Bahan-bahan</h2>
-                         <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4 text-muted-foreground">
-                            <div>
-                                <h3 className="font-semibold text-foreground mb-2">Adonan Kue:</h3>
-                                <ul className="space-y-2">
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>200 gr Mentega</span></li>
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>50 gr Gula halus</span></li>
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>1 butir Kuning telur</span></li>
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>250 gr Tepung terigu protein rendah</span></li>
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>30 gr Tepung maizena</span></li>
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>20 gr Susu bubuk</span></li>
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>100 gr Keju edam/parmesan parut</span></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 className="font-semibold text-foreground mb-2">Lapisan:</h3>
-                                <ul className="space-y-2">
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>Gula palem secukupnya</span></li>
-                                </ul>
-                            </div>
-                        </div>
+                        <ul className="space-y-2 text-muted-foreground">
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>200 gr Mentega</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>150 gr Gula halus</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>1 butir Kuning telur</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>25 gr Cokelat bubuk</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>250 gr Tepung terigu protein rendah</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>20 gr Tepung maizena</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>100 gr Dark cooking chocolate, lelehkan</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>100 gr Kacang mede, sangrai, cincang kasar</span></li>
+                        </ul>
                     </section>
                     
                     <Separator className="my-8" />
@@ -132,21 +138,21 @@ export default function PalmCheeseRecipePage() {
                     <section>
                         <h2 className="text-2xl font-headline font-bold text-accent mb-4">Cara Membuat</h2>
                         <ol className="list-decimal list-outside space-y-4 pl-5 text-muted-foreground">
-                            <li>Kocok mentega dan gula halus hingga lembut. Masukkan kuning telur, kocok rata.</li>
-                            <li>Masukkan keju parut, aduk rata dengan spatula.</li>
-                            <li>Campurkan tepung terigu, maizena, dan susu bubuk. Ayak dan masukkan ke dalam adonan secara bertahap, aduk hingga rata.</li>
-                            <li>Bentuk adonan menjadi bola-bola kecil.</li>
-                            <li>Gulingkan bola adonan di atas gula palem hingga seluruh permukaannya tertutup.</li>
-                            <li>Tata di atas loyang yang sudah diolesi mentega. Beri sedikit tekanan di bagian atasnya.</li>
-                            <li>Panggang dalam oven dengan suhu 150°C selama 25-30 menit atau hingga matang.</li>
+                            <li>Kocok mentega dan gula halus hingga lembut. Masukkan kuning telur, kocok rata. Tambahkan cokelat leleh, aduk rata.</li>
+                            <li>Campurkan tepung terigu, cokelat bubuk, dan maizena. Ayak dan masukkan ke dalam adonan, aduk dengan spatula hingga rata.</li>
+                            <li>Tambahkan kacang mede cincang, aduk hingga menyebar.</li>
+                            <li>Bentuk adonan menjadi bola-bola atau pipihkan dan cetak sesuai selera.</li>
+                            <li>Tata di atas loyang yang sudah diolesi margarin.</li>
+                            <li>Panggang dalam oven suhu 150°C selama 30-35 menit atau hingga matang.</li>
+                            <li>Dinginkan sepenuhnya sebelum disimpan di dalam toples.</li>
                         </ol>
                     </section>
                 </div>
                 <aside className="md:col-span-1 space-y-6">
                     <Card className="bg-card/80">
                         <CardHeader>
-                            <CardTitle className="text-xl font-headline">Suka Kombinasi Unik?</CardTitle>
-                            <CardDescription>Pesan Palm Cheese original dari kami sekarang juga!</CardDescription>
+                            <CardTitle className="text-xl font-headline">Pecinta Cokelat & Kacang?</CardTitle>
+                            <CardDescription>Pesan Choco Mede asli buatan Nasthara untuk camilan terbaikmu.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="flex items-center gap-4 mb-4">
