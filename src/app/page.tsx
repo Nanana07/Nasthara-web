@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
-import type { Product, ProductVariant } from '@/types/product';
+import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
 
 import { Button } from '@/components/ui/button';
@@ -21,81 +21,121 @@ import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { Textarea } from '@/components/ui/textarea';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from '@/components/ui/label';
 
 
 const products: Product[] = [
     {
         name: 'Nastar',
-        description: 'Sehangat kumpul keluarga di ruang tamu nenek, dengan aroma manis mentega dan nanas.',
-        image: 'https://picsum.photos/600/400',
-        hint: 'nastar cookie',
         bestseller: true,
-        variants: [
-            { size: '330 ml', price: 45000 },
-            { size: '500 ml', price: 65000 },
-            { size: '750 ml', price: 75000 },
-            { size: '1000 ml', price: 85000 },
-            { size: '1 kg', price: 110000 },
-        ],
+        flavors: [
+            {
+                name: 'Original',
+                description: 'Sehangat kumpul keluarga di ruang tamu nenek, dengan aroma manis mentega dan nanas.',
+                image: 'https://picsum.photos/600/400',
+                hint: 'nastar cookie',
+                sizes: [
+                    { size: '330 ml', price: 45000 },
+                    { size: '500 ml', price: 65000 },
+                    { size: '750 ml', price: 75000 },
+                    { size: '1000 ml', price: 85000 },
+                    { size: '1 kg', price: 110000 },
+                ],
+            },
+            {
+                name: 'Jeruk',
+                description: 'Klasik yang diberi sentuhan baru. Aroma segar kulit jeruk berpadu dengan manisnya nanas premium.',
+                image: 'https://picsum.photos/600/400',
+                hint: 'orange nastar cookie',
+                sizes: [
+                    { size: '330 ml', price: 45000 },
+                    { size: '500 ml', price: 65000 },
+                    { size: '750 ml', price: 75000 },
+                    { size: '1000 ml', price: 85000 },
+                    { size: '1 kg', price: 110000 },
+                ],
+            }
+        ]
     },
     {
         name: 'Palm Cheese',
-        description: 'Saat keju gurih berpadu dengan manisnya gula aren, menciptakan kelezatan tak terduga.',
-        image: 'https://picsum.photos/600/400',
-        hint: 'palm cheese cookie',
-        variants: [
-            { size: '330 ml', price: 27000 },
-            { size: '500 ml', price: 35000 },
-            { size: '750 ml', price: 45000 },
-            { size: '1000 ml', price: 50000 },
-            { size: '1 kg', price: 80000 },
-        ],
+        flavors: [{
+            name: 'Original',
+            description: 'Saat keju gurih berpadu dengan manisnya gula aren, menciptakan kelezatan tak terduga.',
+            image: 'https://picsum.photos/600/400',
+            hint: 'palm cheese cookie',
+            sizes: [
+                { size: '330 ml', price: 27000 },
+                { size: '500 ml', price: 35000 },
+                { size: '750 ml', price: 45000 },
+                { size: '1000 ml', price: 50000 },
+                { size: '1 kg', price: 80000 },
+            ],
+        }]
     },
     {
         name: 'Lidah Kucing',
-        description: 'Untuk obrolan ringan ditemani secangkir teh hangat dan kebahagiaan yang renyah.',
-        image: 'https://picsum.photos/600/400',
-        hint: 'cat tongue cookie',
         bestseller: true,
-        variants: [
-            { size: '500 ml', price: 37000 },
-            { size: '3 pcs', price: 100000 },
-            { size: '1 kg', price: 80000 },
-        ],
+        flavors: [{
+            name: 'Original',
+            description: 'Untuk obrolan ringan ditemani secangkir teh hangat dan kebahagiaan yang renyah.',
+            image: 'https://picsum.photos/600/400',
+            hint: 'cat tongue cookie',
+            sizes: [
+                { size: '500 ml', price: 37000 },
+                { size: '3 pcs', price: 100000 },
+                { size: '1 kg', price: 80000 },
+            ],
+        }]
     },
     {
         name: 'Kastengel Premium',
-        description: 'Renyahnya kebersamaan dalam tradisi yang selalu dinanti, dengan rasa keju yang melimpah.',
-        image: 'https://picsum.photos/600/400',
-        hint: 'kaasstengels cheese',
-        variants: [
-            { size: '500 ml', price: 70000 },
-        ],
+        flavors: [{
+            name: 'Original',
+            description: 'Renyahnya kebersamaan dalam tradisi yang selalu dinanti, dengan rasa keju yang melimpah.',
+            image: 'https://picsum.photos/600/400',
+            hint: 'kaasstengels cheese',
+            sizes: [
+                { size: '500 ml', price: 70000 },
+            ],
+        }]
     },
     {
         name: 'Choco Mede',
-        description: 'Petualangan rasa baru di setiap gigitan, sebuah kejutan di tengah kesederhanaan.',
-        image: 'https://picsum.photos/600/400',
-        hint: 'chocolate cashew cookie',
-        variants: [
-            { size: '330 ml', price: 40000 },
-            { size: '500 ml', price: 55000 },
-            { size: '750 ml', price: 65000 },
-            { size: '1000 ml', price: 70000 },
-        ],
+        flavors: [{
+            name: 'Original',
+            description: 'Petualangan rasa baru di setiap gigitan, sebuah kejutan di tengah kesederhanaan.',
+            image: 'https://picsum.photos/600/400',
+            hint: 'chocolate cashew cookie',
+            sizes: [
+                { size: '330 ml', price: 40000 },
+                { size: '500 ml', price: 55000 },
+                { size: '750 ml', price: 65000 },
+                { size: '1000 ml', price: 70000 },
+            ],
+        }]
     },
     {
         name: 'Bawang Gunting',
-        description: 'Camilan renyah di sore hari, teman setia saat santai bersama keluarga tercinta.',
-        image: 'https://picsum.photos/600/400',
-        hint: 'savory snack',
-        variants: [
-            { size: 'Pouch', price: 8000 },
-            { size: '1/2 kg', price: 40000 },
-            { size: '1 kg', price: 75000 },
-        ],
+        flavors: [{
+            name: 'Original',
+            description: 'Camilan renyah di sore hari, teman setia saat santai bersama keluarga tercinta.',
+            image: 'https://picsum.photos/600/400',
+            hint: 'savory snack',
+            sizes: [
+                { size: 'Pouch', price: 8000 },
+                { size: '1/2 kg', price: 40000 },
+                { size: '1 kg', price: 75000 },
+            ],
+        }]
     },
 ];
+
+const allProductFlavors: (ProductFlavorVariant & { productName: string, bestseller: boolean | undefined })[] = products.flatMap(p => 
+    p.flavors.map(f => ({ ...f, productName: p.name, bestseller: p.bestseller }))
+);
+
 
 const testimonials = [
   {
@@ -208,17 +248,23 @@ const HeroSection: FC = () => (
 const ProductCard: FC<{ product: Product, onSelect: () => void }> = ({ product, onSelect }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+  
+  const [selectedFlavor, setSelectedFlavor] = useState(product.flavors[0]);
+  const [selectedSize, setSelectedSize] = useState(selectedFlavor.sizes[0]);
 
   useEffect(() => {
-    setSelectedVariant(product.variants[0]);
+    setSelectedFlavor(product.flavors[0]);
   }, [product]);
 
+  useEffect(() => {
+    setSelectedSize(selectedFlavor.sizes[0]);
+  }, [selectedFlavor]);
+
   const handleAddToCart = () => {
-    addToCart(product, selectedVariant);
+    addToCart(product.name, selectedFlavor, selectedSize);
     toast({
       title: "Berhasil!",
-      description: `${product.name} (${selectedVariant.size}) telah ditambahkan ke keranjang.`,
+      description: `${product.name} ${selectedFlavor.name !== 'Original' ? `(${selectedFlavor.name})` : ''} (${selectedSize.size}) telah ditambahkan ke keranjang.`,
     });
   };
 
@@ -232,34 +278,66 @@ const ProductCard: FC<{ product: Product, onSelect: () => void }> = ({ product, 
         )}
         <button onClick={onSelect} className="aspect-video overflow-hidden w-full cursor-pointer">
           <Image
-            src={product.image}
-            alt={product.name}
+            src={selectedFlavor.image}
+            alt={`${product.name} - ${selectedFlavor.name}`}
             width={600}
             height={400}
-            data-ai-hint={product.hint}
+            data-ai-hint={selectedFlavor.hint}
             className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out"
           />
         </button>
       </CardHeader>
       <CardContent className="p-6 flex-grow flex flex-col">
         <CardTitle className="font-headline text-2xl mb-2">{product.name}</CardTitle>
-        <p className="font-semibold text-lg text-accent mb-2">{formatPrice(selectedVariant.price)}</p>
-        <CardDescription className="text-base text-muted-foreground flex-grow mb-4">{product.description}</CardDescription>
+        <p className="font-semibold text-lg text-accent mb-2">{formatPrice(selectedSize.price)}</p>
+        <CardDescription className="text-base text-muted-foreground flex-grow mb-4">{selectedFlavor.description}</CardDescription>
         
-        {product.variants.length > 1 && (
+        {product.flavors.length > 1 && (
             <div className="mb-4">
+                <Label>Rasa</Label>
+                <RadioGroup 
+                    value={selectedFlavor.name} 
+                    onValueChange={(flavorName) => {
+                        const newFlavor = product.flavors.find(f => f.name === flavorName);
+                        if (newFlavor) setSelectedFlavor(newFlavor);
+                    }} 
+                    className="flex gap-2 pt-2"
+                >
+                    {product.flavors.map((flavor) => (
+                        <div key={flavor.name} className="flex items-center">
+                            <RadioGroupItem value={flavor.name} id={`${product.name}-${flavor.name}`} className="sr-only" />
+                            <Label 
+                                htmlFor={`${product.name}-${flavor.name}`}
+                                className={cn(
+                                    "px-4 py-2 border rounded-full cursor-pointer text-sm",
+                                    selectedFlavor.name === flavor.name 
+                                        ? "bg-primary text-primary-foreground border-primary" 
+                                        : "bg-background hover:bg-accent/10"
+                                )}
+                            >
+                                {flavor.name}
+                            </Label>
+                        </div>
+                    ))}
+                </RadioGroup>
+            </div>
+        )}
+
+        {selectedFlavor.sizes.length > 1 && (
+            <div className="mb-4">
+                <Label>Ukuran</Label>
                 <Select
-                    value={selectedVariant.size}
+                    value={selectedSize.size}
                     onValueChange={(size) => {
-                        const newVariant = product.variants.find(v => v.size === size);
-                        if(newVariant) setSelectedVariant(newVariant);
+                        const newSize = selectedFlavor.sizes.find(v => v.size === size);
+                        if(newSize) setSelectedSize(newSize);
                     }}
                 >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full mt-2">
                         <SelectValue placeholder="Pilih ukuran" />
                     </SelectTrigger>
                     <SelectContent>
-                        {product.variants.map((variant) => (
+                        {selectedFlavor.sizes.map((variant) => (
                             <SelectItem key={variant.size} value={variant.size}>
                                 {variant.size} - {formatPrice(variant.price)}
                             </SelectItem>
@@ -289,7 +367,8 @@ const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }
   const onSubmit = (values: CartDialogFormValues) => {
     let message = `Halo Nasthara, saya mau pre-order:\n\n*Nama Pemesan:* ${values.customerName}\n\n*Pesanan:*\n`;
     cartItems.forEach(item => {
-      message += `- ${item.name} (${item.variant.size}) x ${item.quantity} - ${formatPrice(item.variant.price * item.quantity)}\n`;
+      const flavorName = item.flavorName !== 'Original' ? ` (${item.flavorName})` : '';
+      message += `- ${item.productName}${flavorName} (${item.size.size}) x ${item.quantity} - ${formatPrice(item.size.price * item.quantity)}\n`;
     });
     message += `\n*Total Harga:* ${formatPrice(totalPrice)}\n\nTerima kasih!`;
     
@@ -319,10 +398,10 @@ const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }
             <div className="max-h-64 overflow-y-auto pr-4 -mr-4 space-y-4">
               {cartItems.map(item => (
                 <div key={item.id} className="flex items-center gap-4 animate-in fade-in slide-in-from-left-4">
-                  <Image src={item.image} alt={item.name} width={64} height={64} className="rounded-md object-cover" data-ai-hint={item.hint} />
+                  <Image src={item.image} alt={item.productName} width={64} height={64} className="rounded-md object-cover" data-ai-hint={item.hint} />
                   <div className="flex-grow">
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">{item.variant.size} - {formatPrice(item.variant.price)}</p>
+                    <p className="font-semibold">{item.productName} {item.flavorName !== 'Original' ? `(${item.flavorName})` : ''}</p>
+                    <p className="text-sm text-muted-foreground">{item.size.size} - {formatPrice(item.size.price)}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button type="button" variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
@@ -386,7 +465,7 @@ const ProductSection: FC<{ onProductSelect: (product: Product) => void }> = ({ o
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => (
-                <div key={index} className="animate-fade-in-up" style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'both' }}>
+                <div key={product.name} className="animate-fade-in-up" style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'both' }}>
                   <ProductCard product={product} onSelect={() => onProductSelect(product)} />
                 </div>
             ))}
@@ -526,7 +605,9 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
         }
     }, [recommendation]);
     
-    const recommendedProduct = products.find(p => p.name.toLowerCase() === recommendation?.name.toLowerCase());
+    const recommendedProductFlavor = allProductFlavors.find(p => `${p.productName} ${p.name}`.toLowerCase().includes(recommendation?.name.toLowerCase() || ''));
+    const recommendedProduct = products.find(p => p.name === recommendedProductFlavor?.productName);
+
 
     return (
         <section className="py-20 px-4 bg-baking-pattern">
@@ -561,22 +642,22 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
 
                         {error && <p className="text-destructive mt-4 text-center">{error}</p>}
 
-                        {recommendation && recommendedProduct && (
+                        {recommendation && recommendedProductFlavor && recommendedProduct && (
                             <div ref={resultRef} className="mt-8 text-center animate-in fade-in-up">
                                 <Separator className="my-6"/>
                                 <h3 className="text-2xl font-headline font-bold text-accent mb-4">Our Recommendation For You!</h3>
                                 <Card className="overflow-hidden">
                                      <Image
-                                        src={recommendedProduct.image}
-                                        alt={recommendedProduct.name}
+                                        src={recommendedProductFlavor.image}
+                                        alt={recommendedProductFlavor.name}
                                         width={600}
                                         height={300}
-                                        data-ai-hint={recommendedProduct.hint}
+                                        data-ai-hint={recommendedProductFlavor.hint}
                                         className="object-cover w-full h-48"
                                     />
                                     <CardHeader>
                                         <CardTitle className="flex items-center justify-center gap-2 text-2xl font-headline">
-                                            <Sparkles className="h-6 w-6 text-primary"/> {recommendation.name}
+                                            <Sparkles className="h-6 w-6 text-primary"/> {recommendedProduct.name} {recommendedProductFlavor.name !== 'Original' ? `(${recommendedProductFlavor.name})` : ''}
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent>
@@ -602,62 +683,102 @@ const ProductDetailDialog: FC<{
 }> = ({ product, isOpen, onOpenChange }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
+  
+  const [selectedFlavor, setSelectedFlavor] = useState<ProductFlavorVariant | null>(null);
+  const [selectedSize, setSelectedSize] = useState<ProductSizeVariant | null>(null);
 
   useEffect(() => {
     if (product) {
-      setSelectedVariant(product.variants[0]);
+      setSelectedFlavor(product.flavors[0]);
     }
   }, [product]);
+
+  useEffect(() => {
+    if (selectedFlavor) {
+      setSelectedSize(selectedFlavor.sizes[0]);
+    }
+  }, [selectedFlavor]);
   
-  if (!product || !selectedVariant) return null;
+  if (!product || !selectedFlavor || !selectedSize) return null;
 
   const handleAddToCart = () => {
-    addToCart(product, selectedVariant);
+    addToCart(product.name, selectedFlavor, selectedSize);
     toast({
       title: "Berhasil!",
-      description: `${product.name} (${selectedVariant.size}) telah ditambahkan ke keranjang.`,
+      description: `${product.name} ${selectedFlavor.name !== 'Original' ? `(${selectedFlavor.name})` : ''} (${selectedSize.size}) telah ditambahkan ke keranjang.`,
     });
     onOpenChange(false);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl grid-cols-1 md:grid-cols-2 grid gap-8 p-0 bg-card">
-        <div className="p-0">
+      <DialogContent className="sm:max-w-3xl grid-cols-1 md:grid-cols-2 grid gap-0 p-0 bg-card">
+        <div className="p-0 overflow-hidden rounded-l-lg">
            <Image
-            src={product.image}
-            alt={product.name}
+            src={selectedFlavor.image}
+            alt={`${product.name} - ${selectedFlavor.name}`}
             width={800}
             height={800}
-            data-ai-hint={product.hint}
-            className="object-cover w-full h-full rounded-l-lg"
+            data-ai-hint={selectedFlavor.hint}
+            className="object-cover w-full h-full"
           />
         </div>
         <div className="p-8 flex flex-col">
           <DialogHeader className="text-left">
             <DialogTitle className="font-headline text-3xl mb-2 text-accent">{product.name}</DialogTitle>
             <DialogDescription className="text-base">
-              {product.description}
+              {selectedFlavor.description}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex-grow my-6">
-            <p className="text-3xl font-bold text-primary mb-4">{formatPrice(selectedVariant.price)}</p>
-             {product.variants.length > 1 && (
-                <div className="mb-4">
-                    <FormLabel>Ukuran</FormLabel>
+          <div className="flex-grow my-6 space-y-6">
+            <p className="text-3xl font-bold text-primary">{formatPrice(selectedSize.price)}</p>
+            
+            {product.flavors.length > 1 && (
+                <div>
+                    <Label>Rasa</Label>
+                    <RadioGroup 
+                        value={selectedFlavor.name} 
+                        onValueChange={(flavorName) => {
+                            const newFlavor = product.flavors.find(f => f.name === flavorName);
+                            if (newFlavor) setSelectedFlavor(newFlavor);
+                        }} 
+                        className="flex gap-2 pt-2"
+                    >
+                        {product.flavors.map((flavor) => (
+                            <div key={flavor.name} className="flex items-center">
+                                <RadioGroupItem value={flavor.name} id={`dialog-${product.name}-${flavor.name}`} className="sr-only" />
+                                <Label 
+                                    htmlFor={`dialog-${product.name}-${flavor.name}`}
+                                    className={cn(
+                                        "px-4 py-2 border rounded-full cursor-pointer text-sm",
+                                        selectedFlavor.name === flavor.name 
+                                            ? "bg-primary text-primary-foreground border-primary" 
+                                            : "bg-background hover:bg-accent/10"
+                                    )}
+                                >
+                                    {flavor.name}
+                                </Label>
+                            </div>
+                        ))}
+                    </RadioGroup>
+                </div>
+            )}
+
+            {selectedFlavor.sizes.length > 1 && (
+                <div>
+                    <Label>Ukuran</Label>
                     <Select
-                        value={selectedVariant.size}
+                        value={selectedSize.size}
                         onValueChange={(size) => {
-                            const newVariant = product.variants.find(v => v.size === size);
-                            if(newVariant) setSelectedVariant(newVariant);
+                            const newSize = selectedFlavor.sizes.find(v => v.size === size);
+                            if(newSize) setSelectedSize(newSize);
                         }}
                     >
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full mt-2">
                             <SelectValue placeholder="Pilih ukuran" />
                         </SelectTrigger>
                         <SelectContent>
-                            {product.variants.map((variant) => (
+                            {selectedFlavor.sizes.map((variant) => (
                                 <SelectItem key={variant.size} value={variant.size}>
                                     {variant.size} - {formatPrice(variant.price)}
                                 </SelectItem>
@@ -743,5 +864,3 @@ export default function Home() {
     </div>
   );
 }
-
-    

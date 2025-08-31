@@ -1,14 +1,19 @@
 // types/product.ts
-export interface ProductVariant {
+export interface ProductSizeVariant {
   size: string;
   price: number;
 }
 
-export interface Product {
+export interface ProductFlavorVariant {
   name: string;
   description: string;
   image: string;
   hint: string;
-  variants: ProductVariant[];
+  sizes: ProductSizeVariant[];
+}
+
+export interface Product {
+  name: string; // e.g., "Nastar"
   bestseller?: boolean;
+  flavors: ProductFlavorVariant[];
 }
