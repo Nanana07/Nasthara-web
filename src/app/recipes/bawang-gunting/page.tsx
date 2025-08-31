@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Cookie, Printer, ShoppingCart, ChefHat, CheckCircle2, Home, BookHeart } from 'lucide-react';
 import type { Product } from '@/types/product';
-import { Logo } from '@/components/Logo';
 
 const product: Product = {
     name: 'Bawang Gunting',
@@ -36,7 +35,7 @@ const Header = () => (
   <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
+          <Image src="/nasthara.png" alt="Nasthara Logo" width={32} height={32} className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-4">
@@ -61,7 +60,7 @@ const Footer: React.FC = () => (
   <footer className="bg-card/80 py-12 px-4 mt-20">
     <div className="container mx-auto text-center text-muted-foreground">
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Logo />
+        <Image src="/nasthara.png" alt="Nasthara Logo" width={32} height={32} />
         <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
       </div>
        <p className="text-lg italic mb-6">“Because every home has a taste. And that taste is Nasthara.”</p>
