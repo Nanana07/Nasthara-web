@@ -6,20 +6,23 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen } from 'lucide-react';
+import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
 import { RecommendationInputSchema, type RecommendationInput } from '@/ai/flows/recommend-cookie-types';
 import { generateCookieStory } from '@/ai/flows/story-generator-flow';
+import { recommendGift } from '@/ai/flows/gift-assistant-flow';
+import { GiftAssistantInputSchema, type GiftAssistantInput } from '@/ai/flows/gift-assistant-types';
 
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
@@ -778,6 +781,117 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
     );
 };
 
+const GiftAssistantSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [recommendation, setRecommendation] = useState<{name: string, reason: string} | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const resultRef = useRef<HTMLDivElement>(null);
+    
+    const form = useForm<GiftAssistantInput>({
+        resolver: zodResolver(GiftAssistantInputSchema),
+        defaultValues: {
+            description: '',
+        },
+    });
+
+    const onSubmit = async (values: GiftAssistantInput) => {
+        setIsLoading(true);
+        setRecommendation(null);
+        setError(null);
+        try {
+            const result = await recommendGift(values);
+            setRecommendation(result);
+        } catch (e) {
+            setError("Maaf, terjadi kesalahan saat mencari kado. Coba lagi nanti.");
+            console.error(e);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    useEffect(() => {
+        if (recommendation && resultRef.current) {
+            resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [recommendation]);
+    
+    const recommendedProductFlavor = allProductFlavors.find(p => `${p.productName}`.toLowerCase().includes(recommendation?.name.toLowerCase() || ''));
+    const recommendedProduct = products.find(p => p.name === recommendedProductFlavor?.productName);
+
+    return (
+        <section className="py-20 px-4">
+            <div className="container mx-auto max-w-2xl">
+                <Card className="p-8 shadow-2xl bg-card/95 backdrop-blur-sm">
+                    <CardHeader className="text-center p-0 mb-6">
+                        <Gift className="mx-auto h-10 w-10 text-primary mb-4" />
+                        <CardTitle className="text-3xl font-headline text-accent">Asisten Kado Nasthara</CardTitle>
+                        <CardDescription className="text-lg">Bingung pilih kado? Biarkan kami bantu!</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                         <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                <FormField
+                                  control={form.control}
+                                  name="description"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-lg font-semibold">Ceritakan sedikit tentang kado yang Anda cari</FormLabel>
+                                       <FormControl>
+                                        <Textarea
+                                          placeholder="Contoh: 'Untuk ulang tahun sahabat yang suka banget keju' atau 'Camilan buat nonton bareng teman-teman, yang gurih dan seru'"
+                                          className="resize-none"
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormDescription>
+                                        Jelaskan untuk siapa dan acara apa, biar kami carikan yang paling pas.
+                                      </FormDescription>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                <Button type="submit" disabled={isLoading} size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground !mt-8 text-base">
+                                    {isLoading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Mencari kado terbaik...</> : <><Sparkles className="mr-2 h-5 w-5" /> Cari Kado!</>}
+                                 </Button>
+                            </form>
+                        </Form>
+
+                        {error && <p className="text-destructive mt-4 text-center">{error}</p>}
+
+                        {recommendation && recommendedProductFlavor && recommendedProduct && (
+                            <div ref={resultRef} className="mt-8 text-center animate-in fade-in-up">
+                                <Separator className="my-6"/>
+                                <h3 className="text-2xl font-headline font-bold text-accent mb-4">Kami Punya Ide Kado Sempurna!</h3>
+                                <Card className="overflow-hidden">
+                                     <Image
+                                        src={recommendedProductFlavor.image}
+                                        alt={recommendedProduct.name}
+                                        width={600}
+                                        height={300}
+                                        data-ai-hint={recommendedProductFlavor.hint}
+                                        className="object-cover w-full h-48"
+                                    />
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center justify-center gap-2 text-2xl font-headline">
+                                            <Gift className="h-6 w-6 text-primary"/> {recommendedProduct.name}
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-muted-foreground italic mb-4">"{recommendation.reason}"</p>
+                                        <Button onClick={() => onProductSelect(recommendedProduct)} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                                          Bungkus Kado Ini!
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+        </section>
+    );
+};
+
 const ProductDetailDialog: FC<{
   product: Product | null;
   isOpen: boolean;
@@ -971,6 +1085,7 @@ export default function Home() {
         <ProductSection onProductSelect={handleProductSelect} />
         <MidCtaSection />
         <AIRecommenderSection onProductSelect={handleProductSelect} />
+        <GiftAssistantSection onProductSelect={handleProductSelect} />
         <TestimonialSection />
         <SeasonalSection/>
       </main>
