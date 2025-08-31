@@ -116,7 +116,7 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
             )}
             <span className="sr-only">Keranjang Belanja</span>
           </Button>
-          <Link href="https://shopee.co.id" target="_blank" rel="noopener noreferrer" aria-label="Shopee">
+          <Link href="https://shopee.co.id/nasthar_a" target="_blank" rel="noopener noreferrer" aria-label="Shopee">
             <Button variant="ghost" size="icon">
               <ShopeeIcon className="h-6 w-6 text-accent" />
             </Button>
@@ -149,7 +149,7 @@ const HeroSection: FC = () => (
           <a href="#products">Order Now</a>
         </Button>
         <Button asChild size="lg" variant="outline">
-          <a href="https://shopee.co.id" target="_blank" rel="noopener noreferrer">
+          <a href="https://shopee.co.id/nasthar_a" target="_blank" rel="noopener noreferrer">
             <ShopeeIcon className="mr-2 h-5 w-5" /> Order via Shopee
           </a>
         </Button>
@@ -370,7 +370,7 @@ const SeasonalSection: FC = () => (
             <a href="#products">Order Before It’s Gone</a>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <a href="https://shopee.co.id" target="_blank" rel="noopener noreferrer">
+            <a href="https://shopee.co.id/nasthar_a" target="_blank" rel="noopener noreferrer">
              <ShopeeIcon className="mr-2 h-5 w-5" /> Belanja di Shopee
             </a>
           </Button>
@@ -426,7 +426,7 @@ const Footer: FC = () => (
           </Button>
            <Separator orientation="vertical" className="h-6" />
           <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
-            <Link href="https://shopee.co.id" target="_blank" rel="noopener noreferrer">Shopee</Link>
+            <Link href="https://shopee.co.id/nasthar_a" target="_blank" rel="noopener noreferrer">Shopee</Link>
           </Button>
         </div>
       </div>
