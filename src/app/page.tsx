@@ -31,6 +31,7 @@ import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/Logo';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
+export const maxDuration = 60;
 
 const products: Product[] = [
     {
@@ -935,8 +936,8 @@ const ProductDetailDialog: FC<{
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0 bg-card">
-        <div className="flex flex-col">
-           <div className="w-full aspect-[4/3] overflow-hidden">
+        <div className="flex flex-col md:flex-row">
+           <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden">
              <Image
               src={selectedFlavor.image}
               alt={`${product.name} - ${selectedFlavor.name}`}
@@ -946,7 +947,7 @@ const ProductDetailDialog: FC<{
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="p-6 sm:p-8 flex flex-col">
+          <div className="p-6 sm:p-8 flex flex-col md:w-1/2">
             <DialogHeader className="text-left">
               <DialogTitle className="font-headline text-3xl mb-2 text-accent">{product.name}</DialogTitle>
               <DialogDescription className="text-base">
