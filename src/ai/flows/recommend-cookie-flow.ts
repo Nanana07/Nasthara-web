@@ -6,7 +6,6 @@
  */
 import { ai } from '@/ai/genkit';
 import { RecommendationInputSchema, RecommendationOutputSchema, type RecommendationInput } from '@/ai/flows/recommend-cookie-types';
-import { defineFlow } from 'genkit/flow';
 
 const products = [
     { name: 'Nastar', description: 'Manis, lumer di mulut, dengan isian selai nanas premium. Klasik dan selalu jadi favorit.' },
@@ -17,7 +16,7 @@ const products = [
     { name: 'Bawang Gunting', description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Cocok untuk yang tidak terlalu suka manis.' },
 ];
 
-export const recommendCookie = defineFlow(
+export const recommendCookie = ai.defineFlow(
   {
     name: 'recommendCookie',
     inputSchema: RecommendationInputSchema,

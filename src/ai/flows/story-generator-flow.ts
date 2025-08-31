@@ -6,9 +6,8 @@
  */
 import { ai } from '@/ai/genkit';
 import { StoryInputSchema, StoryOutputSchema, type StoryInput } from '@/ai/flows/story-generator-types';
-import { defineFlow } from 'genkit/flow';
 
-export const generateCookieStory = defineFlow(
+export const generateCookieStory = ai.defineFlow(
   {
     name: 'generateCookieStory',
     inputSchema: StoryInputSchema,
