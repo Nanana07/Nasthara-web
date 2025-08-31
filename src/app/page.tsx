@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import type { FC } from 'react';
@@ -22,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
@@ -38,7 +39,7 @@ const products: Product[] = [
             {
                 name: 'Original',
                 description: 'Sehangat kumpul keluarga di ruang tamu nenek, dengan aroma manis mentega dan nanas.',
-                image: 'https://picsum.photos/600/400',
+                image: '/nastar-original.jpg', // Ganti dengan path gambar Anda di folder public
                 hint: 'nastar cookie',
                 sizes: [
                     { size: '330 ml', price: 45000 },
@@ -51,7 +52,7 @@ const products: Product[] = [
             {
                 name: 'Jeruk',
                 description: 'Klasik yang diberi sentuhan baru. Aroma segar kulit jeruk berpadu dengan manisnya nanas premium.',
-                image: 'https://picsum.photos/600/400',
+                image: '/nastar-jeruk.jpg', // Ganti dengan path gambar Anda di folder public
                 hint: 'orange nastar cookie',
                 sizes: [
                     { size: '330 ml', price: 45000 },
@@ -68,7 +69,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Saat keju gurih berpadu dengan manisnya gula aren, menciptakan kelezatan tak terduga.',
-            image: 'https://picsum.photos/600/400',
+            image: '/palm-cheese.jpg', // Ganti dengan path gambar Anda di folder public
             hint: 'palm cheese cookie',
             sizes: [
                 { size: '330 ml', price: 27000 },
@@ -85,7 +86,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Untuk obrolan ringan ditemani secangkir teh hangat dan kebahagiaan yang renyah.',
-            image: 'https://picsum.photos/600/400',
+            image: '/lidah-kucing.jpg', // Ganti dengan path gambar Anda di folder public
             hint: 'cat tongue cookie',
             sizes: [
                 { size: '500 ml', price: 37000 },
@@ -99,7 +100,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Renyahnya kebersamaan dalam tradisi yang selalu dinanti, dengan rasa keju yang melimpah.',
-            image: 'https://picsum.photos/600/400',
+            image: '/kastengel.jpg', // Ganti dengan path gambar Anda di folder public
             hint: 'kaasstengels cheese',
             sizes: [
                 { size: '500 ml', price: 70000 },
@@ -111,7 +112,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Petualangan rasa baru di setiap gigitan, sebuah kejutan di tengah kesederhanaan.',
-            image: 'https://picsum.photos/600/400',
+            image: '/choco-mede.jpg', // Ganti dengan path gambar Anda di folder public
             hint: 'chocolate cashew cookie',
             sizes: [
                 { size: '330 ml', price: 40000 },
@@ -126,7 +127,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Camilan renyah di sore hari, teman setia saat santai bersama keluarga tercinta.',
-            image: 'https://picsum.photos/600/400',
+            image: '/bawang-gunting.jpg', // Ganti dengan path gambar Anda di folder public
             hint: 'savory snack',
             sizes: [
                 { size: 'Pouch', price: 8000 },
@@ -200,7 +201,7 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
     <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <Cookie className="h-8 w-8 text-primary group-hover:animate-spin" style={{ animationDuration: '2s' }} />
+          <Image src="/logo.svg" alt="Nasthara Logo" width={32} height={32} className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-1 sm:gap-2">
@@ -564,7 +565,7 @@ const MidCtaSection: FC = () => (
         </div>
         <div className="order-1 md:order-2 overflow-hidden rounded-lg shadow-lg">
             <Image
-              src="https://picsum.photos/800/600"
+              src="/cookie-closeup.jpg" // Ganti dengan path gambar Anda di folder public
               alt="Close up of a cookie"
               width={800}
               height={600}
@@ -1036,7 +1037,7 @@ const Footer: FC = () => (
   <footer className="bg-card/80 py-12 px-4 mt-20">
     <div className="container mx-auto text-center text-muted-foreground">
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Cookie className="h-8 w-8 text-primary" />
+        <Image src="/logo.svg" alt="Nasthara Logo" width={32} height={32} />
         <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
       </div>
       <p className="text-lg italic mb-6">“Because every home has a taste. And that taste is Nasthara.”</p>
@@ -1109,3 +1110,5 @@ export default function Home() {
     </div>
   );
 }
+
+    

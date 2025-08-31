@@ -15,7 +15,7 @@ const nastarProduct: Product = {
         {
             name: 'Original',
             description: 'Sehangat kumpul keluarga di ruang tamu nenek, dengan aroma manis mentega dan nanas.',
-            image: 'https://picsum.photos/600/400',
+            image: '/nastar-original.jpg', // Ganti dengan path gambar Anda di folder public
             hint: 'nastar cookie',
             sizes: [
                 { size: '330 ml', price: 45000 },
@@ -28,7 +28,7 @@ const nastarProduct: Product = {
         {
             name: 'Jeruk',
             description: 'Klasik yang diberi sentuhan baru. Aroma segar kulit jeruk berpadu dengan manisnya nanas premium.',
-            image: 'https://picsum.photos/600/400',
+            image: '/nastar-jeruk.jpg', // Ganti dengan path gambar Anda di folder public
             hint: 'orange nastar cookie',
             sizes: [
                 { size: '330 ml', price: 45000 },
@@ -53,7 +53,7 @@ const Header = () => (
   <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <Cookie className="h-8 w-8 text-primary group-hover:animate-spin" style={{ animationDuration: '2s' }} />
+          <Image src="/logo.svg" alt="Nasthara Logo" width={32} height={32} className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-4">
@@ -78,7 +78,7 @@ const Footer: React.FC = () => (
   <footer className="bg-card/80 py-12 px-4 mt-20">
     <div className="container mx-auto text-center text-muted-foreground">
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Cookie className="h-8 w-8 text-primary" />
+        <Image src="/logo.svg" alt="Nasthara Logo" width={32} height={32} />
         <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
       </div>
        <p className="text-lg italic mb-6">“Because every home has a taste. And that taste is Nasthara.”</p>
@@ -109,7 +109,7 @@ export default function ClassicNastarRecipePage() {
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="https://picsum.photos/1200/600"
+                src="/resep-nastar.jpg" // Ganti dengan path gambar Anda di folder public
                 alt="Classic Nastar"
                 width={1200}
                 height={600}
@@ -228,3 +228,5 @@ export default function ClassicNastarRecipePage() {
     </div>
   );
 }
+
+    

@@ -13,7 +13,7 @@ const recipes = [
     title: 'Classic Nastar',
     slug: 'classic-nastar',
     description: 'Resep klasik yang tak lekang oleh waktu, menghadirkan kelembutan dan rasa nanas yang sempurna di setiap gigitan.',
-    image: 'https://picsum.photos/600/400',
+    image: '/resep-nastar.jpg', // Ganti dengan path gambar Anda di folder public
     hint: 'nastar cookie',
     tags: ['Best Seller', 'Manis', 'Klasik'],
   },
@@ -21,7 +21,7 @@ const recipes = [
     title: 'Palm Cheese Cookies',
     slug: 'palm-cheese',
     description: 'Perpaduan unik rasa gurih dari keju edam dan manis dari gula palem. Renyah di luar, lembut di dalam.',
-    image: 'https://picsum.photos/600/400',
+    image: '/resep-palm-cheese.jpg', // Ganti dengan path gambar Anda di folder public
     hint: 'palm cheese cookie',
     tags: ['Gurih', 'Manis', 'Unik'],
   },
@@ -29,7 +29,7 @@ const recipes = [
     title: 'Lidah Kucing Renyah',
     slug: 'lidah-kucing',
     description: 'Kue tipis, renyah, dan ringan dengan rasa manis vanila yang lembut. Sempurna untuk teman minum teh.',
-    image: 'https://picsum.photos/600/400',
+    image: '/resep-lidah-kucing.jpg', // Ganti dengan path gambar Anda di folder public
     hint: 'cat tongue cookie',
     tags: ['Best Seller', 'Renyah', 'Ringan'],
   },
@@ -37,15 +37,15 @@ const recipes = [
     title: 'Kastengel Keju Premium',
     slug: 'kastengel-keju-premium',
     description: 'Resep Kastengel premium dengan cita rasa keju yang kuat dan tekstur renyah yang bikin nagih.',
-    image: 'https://picsum.photos/600/400',
-    hint: 'premium kaastengels',
+    image: '/resep-kastengel.jpg', // Ganti dengan path gambar Anda di folder public
+    hint: 'premium kaasstengels',
     tags: ['Gurih', 'Premium', 'Keju'],
   },
   {
     title: 'Choco Mede Cookies',
     slug: 'choco-mede',
     description: 'Kombinasi klasik cokelat premium dan kacang mede renyah. Manisnya pas, tidak berlebihan.',
-    image: 'https://picsum.photos/600/400',
+    image: '/resep-choco-mede.jpg', // Ganti dengan path gambar Anda di folder public
     hint: 'chocolate cashew cookie',
     tags: ['Cokelat', 'Kacang', 'Manis'],
   },
@@ -53,7 +53,7 @@ const recipes = [
     title: 'Stik Bawang Gunting',
     slug: 'bawang-gunting',
     description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Cocok untuk yang tidak terlalu suka manis.',
-    image: 'https://picsum.photos/600/400',
+    image: '/resep-bawang-gunting.jpg', // Ganti dengan path gambar Anda di folder public
     hint: 'savory snack',
     tags: ['Gurih', 'Renyah', 'Asin'],
   }
@@ -63,7 +63,7 @@ const Header = () => (
   <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <Cookie className="h-8 w-8 text-primary group-hover:animate-spin" style={{ animationDuration: '2s' }} />
+          <Image src="/logo.svg" alt="Nasthara Logo" width={32} height={32} className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-4">
@@ -81,7 +81,7 @@ const Footer: React.FC = () => (
   <footer className="bg-card/80 py-12 px-4 mt-20">
     <div className="container mx-auto text-center text-muted-foreground">
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Cookie className="h-8 w-8 text-primary" />
+        <Image src="/logo.svg" alt="Nasthara Logo" width={32} height={32} />
         <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
       </div>
        <p className="text-lg italic mb-6">“Because every home has a taste. And that taste is Nasthara.”</p>
@@ -150,3 +150,5 @@ export default function RecipesPage() {
     </div>
   );
 }
+
+    
