@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift } from 'lucide-react';
+import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
@@ -204,6 +204,12 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-1 sm:gap-2">
+            <Button variant="ghost" asChild>
+                <Link href="/recipes">
+                    <BookHeart className="h-5 w-5 mr-2" />
+                    <span className="hidden sm:inline">Resep</span>
+                </Link>
+            </Button>
           <Button variant="ghost" size="icon" onClick={onCartClick} className="relative group">
             <ShoppingCart className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
             {cartCount > 0 && (
@@ -1037,6 +1043,10 @@ const Footer: FC = () => (
       <div className="mb-6">
         <p className="font-semibold text-foreground mb-2">Connect With Us</p>
         <div className="flex justify-center gap-2">
+           <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
+            <Link href="/recipes">Resep</Link>
+          </Button>
+          <Separator orientation="vertical" className="h-6" />
            <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
             <Link href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer">WhatsApp</Link>
           </Button>
