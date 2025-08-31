@@ -16,7 +16,7 @@ const products = [
     { name: 'Bawang Gunting', description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Pilihan tepat untuk hadiah bagi yang tidak terlalu suka manis atau sebagai teman nonton.' },
 ];
 
-const recommendGiftFlow = ai.defineFlow(
+export const recommendGiftFlow = ai.defineFlow(
   {
     name: 'recommendGiftFlow',
     inputSchema: GiftAssistantInputSchema,
@@ -45,7 +45,3 @@ const recommendGiftFlow = ai.defineFlow(
     return output!;
   }
 );
-
-export async function recommendGift(input: GiftAssistantInput) {
-    return await recommendGiftFlow(input);
-}

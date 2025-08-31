@@ -7,15 +7,13 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { runFlow } from '@genkit-ai/next/client';
 import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart, Heart, HomeIcon } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 import { type RecommendationInput, RecommendationInputSchema, type RecommendationOutput } from '@/ai/flows/recommend-cookie-types';
-import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
 import { type StoryInput, type StoryOutput } from '@/ai/flows/story-generator-types';
-import { generateCookieStory } from '@/ai/flows/story-generator-flow';
 import { type GiftAssistantInput, GiftAssistantInputSchema, type GiftAssistantOutput } from '@/ai/flows/gift-assistant-types';
-import { recommendGift } from '@/ai/flows/gift-assistant-flow';
 
 
 import { Button } from '@/components/ui/button';
@@ -179,14 +177,14 @@ const CartDialogFormSchema = z.object({
 
 type CartDialogFormValues = z.infer<typeof CartDialogFormSchema>;
 
-const Header: FC<{ onCartClick: () => void; showHomeButton?: boolean }> = ({ onCartClick, showHomeButton = true }) => {
+const Header: FC<{ onCartClick: () => void; showHomeButton?: boolean }> = ({ onCartClick, showHomeButton = false }) => {
   const { cartCount } = useCart();
   return (
     <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 group">
           <Logo />
-          <span className="text-xl sm:text-2xl font-bold font-headline text-foreground">Nasthara</span>
+          <span className="text-xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center shrink-0">
             {showHomeButton && (
@@ -609,7 +607,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
         setStory(null);
         setStoryError(null);
         try {
-            const result = await recommendCookie(values);
+            const result = await runFlow<RecommendationInput, RecommendationOutput>('recommendCookieFlow', values);
             setRecommendation(result);
         } catch (e) {
             setError("Maaf, terjadi kesalahan saat membuat rekomendasi. Coba lagi nanti.");
@@ -626,7 +624,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
         setStory(null);
         setStoryError(null);
         try {
-            const result = await generateCookieStory({
+            const result = await runFlow<StoryInput, StoryOutput>('generateCookieStoryFlow', {
                 name: recommendation.name,
                 description: recommendedProductFlavor?.description || '',
             });
@@ -811,7 +809,7 @@ const GiftAssistantSection: FC<{ onProductSelect: (product: Product) => void }> 
         setRecommendation(null);
         setError(null);
         try {
-            const result = await recommendGift(values);
+            const result = await runFlow<GiftAssistantInput, GiftAssistantOutput>('recommendGiftFlow', values);
             setRecommendation(result);
         } catch (e) {
             setError("Maaf, terjadi kesalahan saat mencari kado. Coba lagi nanti.");
@@ -938,18 +936,18 @@ const ProductDetailDialog: FC<{
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0 bg-card">
-        <div className="flex flex-col">
-           <div className="w-full">
+        <div className="md:grid md:grid-cols-2 md:items-start">
+           <div className="md:aspect-square">
              <Image
               src={selectedFlavor.image}
               alt={`${product.name} - ${selectedFlavor.name}`}
               width={800}
-              height={600}
+              height={800}
               data-ai-hint={selectedFlavor.hint}
-              className="object-cover w-full h-full aspect-[4/3]"
+              className="object-cover w-full h-full"
             />
           </div>
-          <div className="p-6 sm:p-8 flex flex-col">
+          <div className="p-6 sm:p-8 flex flex-col h-full">
             <DialogHeader className="text-left">
               <DialogTitle className="font-headline text-3xl mb-2 text-accent">{product.name}</DialogTitle>
               <DialogDescription className="text-base">
@@ -1014,7 +1012,7 @@ const ProductDetailDialog: FC<{
                   </div>
               )}
             </div>
-            <DialogFooter>
+            <DialogFooter className="mt-auto">
                <Button onClick={handleAddToCart} size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                   <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
               </Button>
