@@ -28,7 +28,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from '@/components/ui/label';
-import { Logo } from '@/components/Logo';
 
 
 const products: Product[] = [
@@ -185,7 +184,7 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
     <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
+          <Image src="/Nasthara.png" alt="Nasthara Logo" width={32} height={32} className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-1 sm:gap-2">
@@ -553,7 +552,7 @@ const MidCtaSection: FC = () => (
         </div>
         <div className="order-1 md:order-2 overflow-hidden rounded-lg shadow-lg">
             <Image
-              src="/cookies.png"
+              src="/cookies.jpg"
               alt="Close up of a cookie"
               width={800}
               height={600}
@@ -1025,7 +1024,7 @@ const Footer: FC = () => (
   <footer className="bg-card/80 py-12 px-4 mt-20">
     <div className="container mx-auto text-center text-muted-foreground">
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Logo />
+        <Image src="/Nasthara.png" alt="Nasthara Logo" width={32} height={32} />
         <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
       </div>
       <p className="text-lg italic mb-6">“Because every home has a taste. And that taste is Nasthara.”</p>
@@ -1099,3 +1098,5 @@ export default function Home() {
   );
 }
 
+
+    
