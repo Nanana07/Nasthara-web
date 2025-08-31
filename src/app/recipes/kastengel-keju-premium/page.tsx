@@ -14,7 +14,7 @@ const kastengelProduct: Product = {
     flavors: [{
         name: 'Original',
         description: 'Renyahnya kebersamaan dalam tradisi yang selalu dinanti, dengan rasa keju yang melimpah.',
-        image: '/kastengel.jpg', // Ganti dengan path gambar Anda di folder public
+        image: '/kastengel.png',
         hint: 'kaasstengels cheese',
         sizes: [
             { size: '500 ml', price: 70000 },
@@ -89,7 +89,7 @@ export default function KastengelPremiumRecipePage() {
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/resep-kastengel.jpg" // Ganti dengan path gambar Anda di folder public
+                src="/kastengel.png"
                 alt="Kastengel Keju Premium"
                 width={1200}
                 height={600}

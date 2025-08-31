@@ -41,7 +41,7 @@ const products: Product[] = [
             {
                 name: 'Original',
                 description: 'Sehangat kumpul keluarga di ruang tamu nenek, dengan aroma manis mentega dan nanas.',
-                image: '/nastar-original.jpg', // Ganti dengan path gambar Anda di folder public
+                image: '/nastar.png',
                 hint: 'nastar cookie',
                 sizes: [
                     { size: '330 ml', price: 45000 },
@@ -54,7 +54,7 @@ const products: Product[] = [
             {
                 name: 'Jeruk',
                 description: 'Klasik yang diberi sentuhan baru. Aroma segar kulit jeruk berpadu dengan manisnya nanas premium.',
-                image: '/nastar-jeruk.jpg', // Ganti dengan path gambar Anda di folder public
+                image: '/nastar.png',
                 hint: 'orange nastar cookie',
                 sizes: [
                     { size: '330 ml', price: 45000 },
@@ -71,7 +71,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Saat keju gurih berpadu dengan manisnya gula aren, menciptakan kelezatan tak terduga.',
-            image: '/palm-cheese.jpg', // Ganti dengan path gambar Anda di folder public
+            image: '/palm_cheese.png',
             hint: 'palm cheese cookie',
             sizes: [
                 { size: '330 ml', price: 27000 },
@@ -88,7 +88,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Untuk obrolan ringan ditemani secangkir teh hangat dan kebahagiaan yang renyah.',
-            image: '/lidah-kucing.jpg', // Ganti dengan path gambar Anda di folder public
+            image: '/lidah_kucing.png',
             hint: 'cat tongue cookie',
             sizes: [
                 { size: '500 ml', price: 37000 },
@@ -102,7 +102,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Renyahnya kebersamaan dalam tradisi yang selalu dinanti, dengan rasa keju yang melimpah.',
-            image: '/kastengel.jpg', // Ganti dengan path gambar Anda di folder public
+            image: '/kastengel.png',
             hint: 'kaasstengels cheese',
             sizes: [
                 { size: '500 ml', price: 70000 },
@@ -114,7 +114,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Petualangan rasa baru di setiap gigitan, sebuah kejutan di tengah kesederhanaan.',
-            image: '/choco-mede.jpg', // Ganti dengan path gambar Anda di folder public
+            image: '/choco_mede.png',
             hint: 'chocolate cashew cookie',
             sizes: [
                 { size: '330 ml', price: 40000 },
@@ -129,7 +129,7 @@ const products: Product[] = [
         flavors: [{
             name: 'Original',
             description: 'Camilan renyah di sore hari, teman setia saat santai bersama keluarga tercinta.',
-            image: '/bawang-gunting.jpg', // Ganti dengan path gambar Anda di folder public
+            image: '/bawang_gunting.png',
             hint: 'savory snack',
             sizes: [
                 { size: 'Pouch', price: 8000 },
@@ -567,7 +567,7 @@ const MidCtaSection: FC = () => (
         </div>
         <div className="order-1 md:order-2 overflow-hidden rounded-lg shadow-lg">
             <Image
-              src="/cookie-closeup.jpg" // Ganti dengan path gambar Anda di folder public
+              src="/cookie-closeup.jpg"
               alt="Close up of a cookie"
               width={800}
               height={600}

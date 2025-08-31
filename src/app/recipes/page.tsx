@@ -14,7 +14,7 @@ const recipes = [
     title: 'Classic Nastar',
     slug: 'classic-nastar',
     description: 'Resep klasik yang tak lekang oleh waktu, menghadirkan kelembutan dan rasa nanas yang sempurna di setiap gigitan.',
-    image: '/resep-nastar.jpg', // Ganti dengan path gambar Anda di folder public
+    image: '/nastar.png',
     hint: 'nastar cookie',
     tags: ['Best Seller', 'Manis', 'Klasik'],
   },
@@ -22,7 +22,7 @@ const recipes = [
     title: 'Palm Cheese Cookies',
     slug: 'palm-cheese',
     description: 'Perpaduan unik rasa gurih dari keju edam dan manis dari gula palem. Renyah di luar, lembut di dalam.',
-    image: '/resep-palm-cheese.jpg', // Ganti dengan path gambar Anda di folder public
+    image: '/palm_cheese.png',
     hint: 'palm cheese cookie',
     tags: ['Gurih', 'Manis', 'Unik'],
   },
@@ -30,7 +30,7 @@ const recipes = [
     title: 'Lidah Kucing Renyah',
     slug: 'lidah-kucing',
     description: 'Kue tipis, renyah, dan ringan dengan rasa manis vanila yang lembut. Sempurna untuk teman minum teh.',
-    image: '/resep-lidah-kucing.jpg', // Ganti dengan path gambar Anda di folder public
+    image: '/lidah_kucing.png',
     hint: 'cat tongue cookie',
     tags: ['Best Seller', 'Renyah', 'Ringan'],
   },
@@ -38,7 +38,7 @@ const recipes = [
     title: 'Kastengel Keju Premium',
     slug: 'kastengel-keju-premium',
     description: 'Resep Kastengel premium dengan cita rasa keju yang kuat dan tekstur renyah yang bikin nagih.',
-    image: '/resep-kastengel.jpg', // Ganti dengan path gambar Anda di folder public
+    image: '/kastengel.png',
     hint: 'premium kaasstengels',
     tags: ['Gurih', 'Premium', 'Keju'],
   },
@@ -46,7 +46,7 @@ const recipes = [
     title: 'Choco Mede Cookies',
     slug: 'choco-mede',
     description: 'Kombinasi klasik cokelat premium dan kacang mede renyah. Manisnya pas, tidak berlebihan.',
-    image: '/resep-choco-mede.jpg', // Ganti dengan path gambar Anda di folder public
+    image: '/choco_mede.png',
     hint: 'chocolate cashew cookie',
     tags: ['Cokelat', 'Kacang', 'Manis'],
   },
@@ -54,7 +54,7 @@ const recipes = [
     title: 'Stik Bawang Gunting',
     slug: 'bawang-gunting',
     description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Cocok untuk yang tidak terlalu suka manis.',
-    image: '/resep-bawang-gunting.jpg', // Ganti dengan path gambar Anda di folder public
+    image: '/bawang_gunting.png',
     hint: 'savory snack',
     tags: ['Gurih', 'Renyah', 'Asin'],
   }

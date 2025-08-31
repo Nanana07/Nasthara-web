@@ -15,7 +15,7 @@ const product: Product = {
     flavors: [{
         name: 'Original',
         description: 'Untuk obrolan ringan ditemani secangkir teh hangat dan kebahagiaan yang renyah.',
-        image: '/lidah-kucing.jpg', // Ganti dengan path gambar Anda di folder public
+        image: '/lidah_kucing.png',
         hint: 'cat tongue cookie',
         sizes: [
             { size: '500 ml', price: 37000 },
@@ -92,7 +92,7 @@ export default function LidahKucingRecipePage() {
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/resep-lidah-kucing.jpg" // Ganti dengan path gambar Anda di folder public
+                src="/lidah_kucing.png"
                 alt="Lidah Kucing"
                 width={1200}
                 height={600}

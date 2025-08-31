@@ -14,7 +14,7 @@ const product: Product = {
     flavors: [{
         name: 'Original',
         description: 'Saat keju gurih berpadu dengan manisnya gula aren, menciptakan kelezatan tak terduga.',
-        image: '/palm-cheese.jpg', // Ganti dengan path gambar Anda di folder public
+        image: '/palm_cheese.png',
         hint: 'palm cheese cookie',
         sizes: [
             { size: '330 ml', price: 27000 },
@@ -93,7 +93,7 @@ export default function PalmCheeseRecipePage() {
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/resep-palm-cheese.jpg" // Ganti dengan path gambar Anda di folder public
+                src="/palm_cheese.png"
                 alt="Palm Cheese Cookies"
                 width={1200}
                 height={600}

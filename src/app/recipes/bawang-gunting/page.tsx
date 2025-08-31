@@ -14,7 +14,7 @@ const product: Product = {
     flavors: [{
         name: 'Original',
         description: 'Camilan renyah di sore hari, teman setia saat santai bersama keluarga tercinta.',
-        image: '/bawang-gunting.jpg', // Ganti dengan path gambar Anda di folder public
+        image: '/bawang_gunting.png',
         hint: 'savory snack',
         sizes: [
             { size: 'Pouch', price: 8000 },
@@ -91,7 +91,7 @@ export default function BawangGuntingRecipePage() {
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/resep-bawang-gunting.jpg" // Ganti dengan path gambar Anda di folder public
+                src="/bawang_gunting.png"
                 alt="Bawang Gunting"
                 width={1200}
                 height={600}

@@ -16,7 +16,7 @@ const nastarProduct: Product = {
         {
             name: 'Original',
             description: 'Sehangat kumpul keluarga di ruang tamu nenek, dengan aroma manis mentega dan nanas.',
-            image: '/nastar-original.jpg', // Ganti dengan path gambar Anda di folder public
+            image: '/nastar.png',
             hint: 'nastar cookie',
             sizes: [
                 { size: '330 ml', price: 45000 },
@@ -29,7 +29,7 @@ const nastarProduct: Product = {
         {
             name: 'Jeruk',
             description: 'Klasik yang diberi sentuhan baru. Aroma segar kulit jeruk berpadu dengan manisnya nanas premium.',
-            image: '/nastar-jeruk.jpg', // Ganti dengan path gambar Anda di folder public
+            image: '/nastar.png',
             hint: 'orange nastar cookie',
             sizes: [
                 { size: '330 ml', price: 45000 },
@@ -110,7 +110,7 @@ export default function ClassicNastarRecipePage() {
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/resep-nastar.jpg" // Ganti dengan path gambar Anda di folder public
+                src="/nastar.png"
                 alt="Classic Nastar"
                 width={1200}
                 height={600}

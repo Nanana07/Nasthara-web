@@ -14,7 +14,7 @@ const product: Product = {
     flavors: [{
         name: 'Original',
         description: 'Petualangan rasa baru di setiap gigitan, sebuah kejutan di tengah kesederhanaan.',
-        image: '/choco-mede.jpg', // Ganti dengan path gambar Anda di folder public
+        image: '/choco_mede.png',
         hint: 'chocolate cashew cookie',
         sizes: [
             { size: '330 ml', price: 40000 },
@@ -92,7 +92,7 @@ export default function ChocoMedeRecipePage() {
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/resep-choco-mede.jpg" // Ganti dengan path gambar Anda di folder public
+                src="/choco_mede.png"
                 alt="Choco Mede Cookies"
                 width={1200}
                 height={600}
