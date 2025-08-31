@@ -1,14 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, ChevronDown } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
-import type { Product } from '@/types/product';
+import type { Product, ProductVariant } from '@/types/product';
 import { ShopeeIcon } from '@/components/ui/shopee-icon';
 
 import { Button } from '@/components/ui/button';
@@ -18,52 +18,71 @@ import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+
 
 const products: Product[] = [
-  {
-    name: 'Nastar',
-    description: 'Reminds you of: Kumpul keluarga di ruang tamu nenek, aroma manis mentega dan nanas. (Mulai dari IDR 45K)',
-    image: 'https://picsum.photos/600/400',
-    hint: 'nastar cookie',
-    price: 65000,
-    bestseller: true,
-  },
-  {
-    name: 'Palm Cheese',
-    description: 'Reminds you of: Keju gurih berpadu manisnya gula aren, kelezatan yang tak terduga. (Mulai dari IDR 27K)',
-    image: 'https://picsum.photos/600/400',
-    hint: 'palm cheese cookie',
-    price: 35000,
-  },
-  {
-    name: 'Lidah Kucing',
-    description: 'Reminds you of: Obrolan ringan ditemani secangkir teh hangat, kebahagiaan yang renyah. (Mulai dari IDR 37K)',
-    image: 'https://picsum.photos/600/400',
-    hint: 'cat tongue cookie',
-    price: 37000,
-    bestseller: true,
-  },
-  {
-    name: 'Kastengel Premium',
-    description: 'Reminds you of: Keju melimpah dan renyahnya kebersamaan, tradisi yang selalu dinanti. (500ml IDR 70K)',
-    image: 'https://picsum.photos/600/400',
-    hint: 'kaasstengels cheese',
-    price: 70000,
-  },
-  {
-    name: 'Choco Mede',
-    description: 'Reminds you of: Petualangan rasa baru di setiap gigitan, kejutan di tengah kesederhanaan. (Mulai dari IDR 40K)',
-    image: 'https://picsum.photos/600/400',
-    hint: 'chocolate cashew cookie',
-    price: 55000,
-  },
-  {
-    name: 'Bawang Gunting',
-    description: 'Reminds you of: Camilan renyah di sore hari, teman setia saat santai bersama keluarga. (Mulai dari IDR 8K)',
-    image: 'https://picsum.photos/600/400',
-    hint: 'savory snack',
-    price: 40000,
-  },
+    {
+        name: 'Nastar',
+        description: 'Reminds you of: Kumpul keluarga di ruang tamu nenek, aroma manis mentega dan nanas.',
+        image: 'https://picsum.photos/600/400',
+        hint: 'nastar cookie',
+        bestseller: true,
+        variants: [
+            { size: '250gr', price: 45000 },
+            { size: '500gr', price: 65000 },
+        ],
+    },
+    {
+        name: 'Palm Cheese',
+        description: 'Reminds you of: Keju gurih berpadu manisnya gula aren, kelezatan yang tak terduga.',
+        image: 'https://picsum.photos/600/400',
+        hint: 'palm cheese cookie',
+        variants: [
+            { size: '250gr', price: 27000 },
+            { size: '500gr', price: 35000 },
+        ],
+    },
+    {
+        name: 'Lidah Kucing',
+        description: 'Reminds you of: Obrolan ringan ditemani secangkir teh hangat, kebahagiaan yang renyah.',
+        image: 'https://picsum.photos/600/400',
+        hint: 'cat tongue cookie',
+        bestseller: true,
+        variants: [
+            { size: '500ml', price: 37000 },
+        ],
+    },
+    {
+        name: 'Kastengel Premium',
+        description: 'Reminds you of: Keju melimpah dan renyahnya kebersamaan, tradisi yang selalu dinanti.',
+        image: 'https://picsum.photos/600/400',
+        hint: 'kaasstengels cheese',
+        variants: [
+            { size: '500ml', price: 70000 },
+        ],
+    },
+    {
+        name: 'Choco Mede',
+        description: 'Reminds you of: Petualangan rasa baru di setiap gigitan, kejutan di tengah kesederhanaan.',
+        image: 'https://picsum.photos/600/400',
+        hint: 'chocolate cashew cookie',
+        variants: [
+            { size: '250gr', price: 40000 },
+            { size: '500gr', price: 55000 },
+        ],
+    },
+    {
+        name: 'Bawang Gunting',
+        description: 'Reminds you of: Camilan renyah di sore hari, teman setia saat santai bersama keluarga.',
+        image: 'https://picsum.photos/600/400',
+        hint: 'savory snack',
+        variants: [
+            { size: '100gr', price: 8000 },
+            { size: '200gr', price: 15000 },
+        ],
+    },
 ];
 
 const testimonials = [
@@ -122,30 +141,30 @@ const HalalLogo: FC<{ className?: string }> = ({ className }) => (
 const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
   const { cartCount } = useCart();
   return (
-    <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40">
+    <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b border-border/20">
       <div className="container mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <Cookie className="h-8 w-8 text-primary" />
+        <Link href="/" className="flex items-center gap-2 group">
+          <Cookie className="h-8 w-8 text-primary group-hover:animate-spin" style={{ animationDuration: '2s' }} />
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-1 sm:gap-2">
-          <Button variant="ghost" size="icon" onClick={onCartClick} className="relative">
-            <ShoppingCart className="h-6 w-6 text-accent" />
+          <Button variant="ghost" size="icon" onClick={onCartClick} className="relative group">
+            <ShoppingCart className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground animate-in fade-in zoom-in">
                 {cartCount}
               </span>
             )}
             <span className="sr-only">Keranjang Belanja</span>
           </Button>
           <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <Button variant="ghost" size="icon">
-              <Instagram className="h-6 w-6 text-accent" />
+            <Button variant="ghost" size="icon" className="group">
+              <Instagram className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
             </Button>
           </Link>
           <Link href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-            <Button variant="ghost" size="icon">
-              <MessageCircle className="h-6 w-6 text-accent" />
+            <Button variant="ghost" size="icon" className="group">
+              <MessageCircle className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
             </Button>
           </Link>
         </nav>
@@ -157,11 +176,11 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
 const HeroSection: FC = () => (
   <section className="text-center py-20 px-4">
     <div className="container mx-auto">
-      <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary mb-4">A Cookie Made to Feel Like Home</h1>
-      <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground mb-8">
+      <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary mb-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>A Cookie Made to Feel Like Home</h1>
+      <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
         We built a brand that melts hearts before it melts in your mouth ✨
       </p>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '500ms' }}>
         <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
           <a href="#products">Order Now</a>
         </Button>
@@ -178,20 +197,26 @@ const HeroSection: FC = () => (
 const ProductCard: FC<{ product: Product }> = ({ product }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+
+  useEffect(() => {
+    // Reset to the first variant whenever the product prop changes.
+    setSelectedVariant(product.variants[0]);
+  }, [product]);
 
   const handleAddToCart = () => {
-    addToCart(product);
+    addToCart(product, selectedVariant);
     toast({
       title: "Berhasil!",
-      description: `${product.name} telah ditambahkan ke keranjang.`,
+      description: `${product.name} (${selectedVariant.size}) telah ditambahkan ke keranjang.`,
     });
   };
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg">
+    <Card className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg hover:shadow-primary/20">
       <CardHeader className="p-0 relative">
          {product.bestseller && (
-          <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-bold py-1 px-3 rounded-full z-10">
+          <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-bold py-1 px-3 rounded-full z-10 animate-pulse">
             Bestseller 💛
           </div>
         )}
@@ -202,15 +227,39 @@ const ProductCard: FC<{ product: Product }> = ({ product }) => {
             width={600}
             height={400}
             data-ai-hint={product.hint}
-            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out"
           />
         </div>
       </CardHeader>
       <CardContent className="p-6 flex-grow flex flex-col">
         <CardTitle className="font-headline text-2xl mb-2">{product.name}</CardTitle>
-        <p className="font-semibold text-lg text-primary mb-2">{formatPrice(product.price)}</p>
+        <p className="font-semibold text-lg text-primary mb-2">{formatPrice(selectedVariant.price)}</p>
         <CardDescription className="text-base text-muted-foreground flex-grow mb-4">{product.description}</CardDescription>
-        <Button onClick={handleAddToCart} className="w-full mt-auto bg-primary hover:bg-primary/90 text-primary-foreground">
+        
+        {product.variants.length > 1 && (
+            <div className="mb-4">
+                <Select
+                    value={selectedVariant.size}
+                    onValueChange={(size) => {
+                        const newVariant = product.variants.find(v => v.size === size);
+                        if(newVariant) setSelectedVariant(newVariant);
+                    }}
+                >
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih ukuran" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {product.variants.map((variant) => (
+                            <SelectItem key={variant.size} value={variant.size}>
+                                {variant.size} - {formatPrice(variant.price)}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
+        )}
+
+        <Button onClick={handleAddToCart} className="w-full mt-auto bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 transform group-hover:-translate-y-1">
           <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
         </Button>
       </CardContent>
@@ -231,9 +280,9 @@ const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }
   const onSubmit = (values: CartDialogFormValues) => {
     let message = `Halo Nasthara, saya mau pre-order:\n\n*Nama Pemesan:* ${values.customerName}\n\n*Pesanan:*\n`;
     cartItems.forEach(item => {
-      message += `- ${item.name} (${item.quantity} toples) - ${formatPrice(item.price * item.quantity)}\n`;
+      message += `- ${item.name} (${item.variant.size}) x ${item.quantity} - ${formatPrice(item.variant.price * item.quantity)}\n`;
     });
-    message += `\n*Total Harga:* ${formatPrice(totalPrice)}\n\n(Mohon infokan jika ada pilihan ukuran lain yang tersedia untuk produk di atas)\n\nTerima kasih!`;
+    message += `\n*Total Harga:* ${formatPrice(totalPrice)}\n\nTerima kasih!`;
     
     const whatsappUrl = `https://wa.me/6282233676703?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -253,28 +302,29 @@ const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }
         </DialogHeader>
         {cartItems.length === 0 ? (
           <div className="py-12 text-center text-muted-foreground">
+            <Cookie className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
             <p>Keranjang Anda masih kosong.</p>
           </div>
         ) : (
           <>
             <div className="max-h-64 overflow-y-auto pr-4 -mr-4 space-y-4">
               {cartItems.map(item => (
-                <div key={item.name} className="flex items-center gap-4">
+                <div key={item.id} className="flex items-center gap-4 animate-in fade-in slide-in-from-left-4">
                   <Image src={item.image} alt={item.name} width={64} height={64} className="rounded-md object-cover" data-ai-hint={item.hint} />
                   <div className="flex-grow">
                     <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">{formatPrice(item.price)}</p>
+                    <p className="text-sm text-muted-foreground">{item.variant.size} - {formatPrice(item.variant.price)}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button type="button" variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.name, item.quantity - 1)}>
+                    <Button type="button" variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
                       <Minus className="h-4 w-4" />
                     </Button>
                     <span>{item.quantity}</span>
-                    <Button type="button" variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.name, item.quantity + 1)}>
+                    <Button type="button" variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>
-                  <Button type="button" variant="ghost" size="icon" onClick={() => removeFromCart(item.name)} className="text-destructive">
+                  <Button type="button" variant="ghost" size="icon" onClick={() => removeFromCart(item.id)} className="text-destructive hover:bg-destructive/10">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -301,7 +351,7 @@ const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }
                   )}
                 />
                 <DialogFooter>
-                  <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                  <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
                     Checkout via WhatsApp
                   </Button>
                 </DialogFooter>
@@ -328,7 +378,9 @@ const ProductSection: FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => (
-                <ProductCard key={index} product={product} />
+                <div key={index} className="animate-fade-in-up" style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'both' }}>
+                  <ProductCard product={product} />
+                </div>
             ))}
         </div>
       </div>
@@ -360,7 +412,7 @@ const TestimonialSection: FC = () => (
       <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">What Our Family Says</h2>
       <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         {testimonials.map((testimonial, index) => (
-          <Card key={index} className="bg-background shadow-lg text-center">
+          <Card key={index} className="bg-background shadow-lg text-center transform hover:-translate-y-2 transition-transform duration-300">
             <CardContent className="p-8 flex flex-col items-center">
                <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.stars)].map((_, i) => (
@@ -413,14 +465,14 @@ const MidCtaSection: FC = () => (
            Kami percaya, rasa yang paling berkesan bukan hanya tentang bahan-bahan terbaik, tapi juga sentuhan hati yang merangkainya. Kue kami bisa sama dengan yang lain, tapi sentuhan tangan yang membuatnya, itu yang membedakan.
           </p>
         </div>
-        <div className="order-1 md:order-2">
+        <div className="order-1 md:order-2 overflow-hidden rounded-lg shadow-lg">
             <Image
               src="https://picsum.photos/800/600"
               alt="Close up of a cookie"
               width={800}
               height={600}
               data-ai-hint="cookie texture"
-              className="rounded-lg shadow-lg"
+              className="rounded-lg shadow-lg hover:scale-105 transition-transform duration-500"
             />
         </div>
       </div>
