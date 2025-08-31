@@ -92,7 +92,7 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Cookie className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold font-headline text-foreground">Nastthara Bites</span>
+          <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={onCartClick} className="relative">
@@ -183,7 +183,7 @@ const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }
   });
 
   const onSubmit = (values: CartDialogFormValues) => {
-    let message = `Halo Nastthara Bites, saya mau pre-order:\n\n*Nama Pemesan:* ${values.customerName}\n\n*Pesanan:*\n`;
+    let message = `Halo Nasthara, saya mau pre-order:\n\n*Nama Pemesan:* ${values.customerName}\n\n*Pesanan:*\n`;
     cartItems.forEach(item => {
       message += `- ${item.name} (${item.quantity} toples) - ${formatPrice(item.price * item.quantity)}\n`;
     });
@@ -303,7 +303,7 @@ const AboutSection: FC = () => (
       <div className="space-y-4">
         <h2 className="text-3xl md:text-4xl font-headline font-bold">Seni Membuat Kue</h2>
         <p className="text-lg text-muted-foreground">
-          Di Nastthara Bites, kami percaya pada keajaiban kukis buatan sendiri. Setiap batch dibuat berdasarkan pesanan (sistem Pre-Order) untuk memastikan Anda menerima suguhan yang paling segar dan lezat. Kami hanya menggunakan bahan-bahan berkualitas tinggi tanpa bahan pengawet.
+          Di Nasthara, kami percaya pada keajaiban kukis buatan sendiri. Setiap batch dibuat berdasarkan pesanan (sistem Pre-Order) untuk memastikan Anda menerima suguhan yang paling segar dan lezat. Kami hanya menggunakan bahan-bahan berkualitas tinggi tanpa bahan pengawet.
         </p>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
@@ -380,7 +380,7 @@ const Footer: FC = () => (
     <div className="container mx-auto text-center">
       <div className="flex items-center justify-center gap-2 mb-4">
         <Cookie className="h-6 w-6 text-primary" />
-        <span className="text-xl font-bold font-headline text-foreground">Nastthara Bites</span>
+        <span className="text-xl font-bold font-headline text-foreground">Nasthara</span>
       </div>
       <p className="text-muted-foreground mb-4">Fresh from the oven, just for you.</p>
       <div className="flex justify-center gap-4 mb-4">
@@ -396,7 +396,7 @@ const Footer: FC = () => (
         </Link>
       </div>
       <Separator className="my-4 w-1/4 mx-auto" />
-      <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Nastthara Bites. All rights reserved.</p>
+      <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Nasthara. All rights reserved.</p>
     </div>
   </footer>
 );

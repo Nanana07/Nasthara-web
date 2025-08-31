@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { CartProvider } from '@/contexts/CartContext';
 
 export const metadata: Metadata = {
-  title: 'Nastthara Bites',
+  title: 'Nasthara',
   description: 'Freshly baked cookies, made with love.',
 };
 
