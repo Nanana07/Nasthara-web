@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart, Heart } from 'lucide-react';
+import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart, Heart, Home as HomeIcon } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
@@ -182,10 +182,16 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
     <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 group">
-          <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
+          <Logo />
           <span className="text-xl sm:text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center shrink-0">
+            <Button variant="ghost" asChild>
+                <Link href="/">
+                    <HomeIcon className="h-5 w-5 sm:mr-2" />
+                    <span className="hidden sm:inline">Home</span>
+                </Link>
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="group">
@@ -926,97 +932,89 @@ const ProductDetailDialog: FC<{
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl grid-cols-1 md:grid-cols-2 grid gap-0 p-0 bg-card">
-        <div className="p-0 overflow-hidden rounded-l-lg hidden md:block">
-           <Image
-            src={selectedFlavor.image}
-            alt={`${product.name} - ${selectedFlavor.name}`}
-            width={800}
-            height={800}
-            data-ai-hint={selectedFlavor.hint}
-            className="object-cover w-full h-full"
-          />
-        </div>
-        <div className="p-8 flex flex-col">
-          <div className="block md:hidden p-0 overflow-hidden rounded-t-lg -m-8 mb-8">
+      <DialogContent className="max-w-4xl p-0 bg-card">
+        <div className="grid md:grid-cols-2">
+           <div className="order-1">
              <Image
               src={selectedFlavor.image}
               alt={`${product.name} - ${selectedFlavor.name}`}
               width={800}
               height={600}
               data-ai-hint={selectedFlavor.hint}
-              className="object-cover w-full h-48"
+              className="object-cover w-full h-full md:rounded-l-lg"
             />
           </div>
-          <DialogHeader className="text-left">
-            <DialogTitle className="font-headline text-3xl mb-2 text-accent">{product.name}</DialogTitle>
-            <DialogDescription className="text-base">
-              {selectedFlavor.description}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex-grow my-6 space-y-6">
-            <p className="text-3xl font-bold text-primary">{formatPrice(selectedSize.price)}</p>
-            
-            {product.flavors.length > 1 && (
-                <div>
-                    <Label>Rasa</Label>
-                    <RadioGroup 
-                        value={selectedFlavor.name} 
-                        onValueChange={(flavorName) => {
-                            const newFlavor = product.flavors.find(f => f.name === flavorName);
-                            if (newFlavor) setSelectedFlavor(newFlavor);
-                        }} 
-                        className="flex gap-2 pt-2"
-                    >
-                        {product.flavors.map((flavor) => (
-                            <div key={flavor.name} className="flex items-center">
-                                <RadioGroupItem value={flavor.name} id={`dialog-${product.name}-${flavor.name}`} className="sr-only" />
-                                <Label 
-                                    htmlFor={`dialog-${product.name}-${flavor.name}`}
-                                    className={cn(
-                                        "px-4 py-2 border rounded-full cursor-pointer text-sm",
-                                        selectedFlavor.name === flavor.name 
-                                            ? "bg-primary text-primary-foreground border-primary" 
-                                            : "bg-background hover:bg-accent/10"
-                                    )}
-                                >
-                                    {flavor.name}
-                                </Label>
-                            </div>
-                        ))}
-                    </RadioGroup>
-                </div>
-            )}
+          <div className="p-6 sm:p-8 flex flex-col order-2">
+            <DialogHeader className="text-left">
+              <DialogTitle className="font-headline text-3xl mb-2 text-accent">{product.name}</DialogTitle>
+              <DialogDescription className="text-base">
+                {selectedFlavor.description}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex-grow my-6 space-y-6">
+              <p className="text-3xl font-bold text-primary">{formatPrice(selectedSize.price)}</p>
+              
+              {product.flavors.length > 1 && (
+                  <div>
+                      <Label>Rasa</Label>
+                      <RadioGroup 
+                          value={selectedFlavor.name} 
+                          onValueChange={(flavorName) => {
+                              const newFlavor = product.flavors.find(f => f.name === flavorName);
+                              if (newFlavor) setSelectedFlavor(newFlavor);
+                          }} 
+                          className="flex gap-2 pt-2"
+                      >
+                          {product.flavors.map((flavor) => (
+                              <div key={flavor.name} className="flex items-center">
+                                  <RadioGroupItem value={flavor.name} id={`dialog-${product.name}-${flavor.name}`} className="sr-only" />
+                                  <Label 
+                                      htmlFor={`dialog-${product.name}-${flavor.name}`}
+                                      className={cn(
+                                          "px-4 py-2 border rounded-full cursor-pointer text-sm",
+                                          selectedFlavor.name === flavor.name 
+                                              ? "bg-primary text-primary-foreground border-primary" 
+                                              : "bg-background hover:bg-accent/10"
+                                      )}
+                                  >
+                                      {flavor.name}
+                                  </Label>
+                              </div>
+                          ))}
+                      </RadioGroup>
+                  </div>
+              )}
 
-            {selectedFlavor.sizes.length > 1 && (
-                <div>
-                    <Label>Ukuran</Label>
-                    <Select
-                        value={selectedSize.size}
-                        onValueChange={(size) => {
-                            const newSize = selectedFlavor.sizes.find(v => v.size === size);
-                            if(newSize) setSelectedSize(newSize);
-                        }}
-                    >
-                        <SelectTrigger className="w-full mt-2">
-                            <SelectValue placeholder="Pilih ukuran" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {selectedFlavor.sizes.map((variant) => (
-                                <SelectItem key={variant.size} value={variant.size}>
-                                    {variant.size} - {formatPrice(variant.price)}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            )}
+              {selectedFlavor.sizes.length > 1 && (
+                  <div>
+                      <Label>Ukuran</Label>
+                      <Select
+                          value={selectedSize.size}
+                          onValueChange={(size) => {
+                              const newSize = selectedFlavor.sizes.find(v => v.size === size);
+                              if(newSize) setSelectedSize(newSize);
+                          }}
+                      >
+                          <SelectTrigger className="w-full mt-2">
+                              <SelectValue placeholder="Pilih ukuran" />
+                          </SelectTrigger>
+                          <SelectContent>
+                              {selectedFlavor.sizes.map((variant) => (
+                                  <SelectItem key={variant.size} value={variant.size}>
+                                      {variant.size} - {formatPrice(variant.price)}
+                                  </SelectItem>
+                              ))}
+                          </SelectContent>
+                      </Select>
+                  </div>
+              )}
+            </div>
+            <DialogFooter>
+               <Button onClick={handleAddToCart} size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                  <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+              </Button>
+            </DialogFooter>
           </div>
-          <DialogFooter>
-             <Button onClick={handleAddToCart} size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
-            </Button>
-          </DialogFooter>
         </div>
       </DialogContent>
     </Dialog>
@@ -1060,7 +1058,7 @@ const Footer: FC = () => (
   </footer>
 );
 
-export default function Home() {
+export default function HomePage() {
   const [isCartOpen, setCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isProductDetailOpen, setProductDetailOpen] = useState(false);
