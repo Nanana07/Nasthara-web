@@ -16,9 +16,9 @@ const products = [
     { name: 'Bawang Gunting', description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Cocok untuk yang tidak terlalu suka manis.' },
 ];
 
-export const recommendCookie = ai.defineFlow(
+const recommendCookieFlow = ai.defineFlow(
   {
-    name: 'recommendCookie',
+    name: 'recommendCookieFlow',
     inputSchema: RecommendationInputSchema,
     outputSchema: RecommendationOutputSchema,
   },
@@ -47,3 +47,7 @@ export const recommendCookie = ai.defineFlow(
     return output!;
   }
 );
+
+export async function recommendCookie(input: RecommendationInput) {
+    return await recommendCookieFlow(input);
+}

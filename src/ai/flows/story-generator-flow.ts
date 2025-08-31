@@ -7,9 +7,9 @@
 import { ai } from '@/ai/genkit';
 import { StoryInputSchema, StoryOutputSchema, type StoryInput } from '@/ai/flows/story-generator-types';
 
-export const generateCookieStory = ai.defineFlow(
+const generateCookieStoryFlow = ai.defineFlow(
   {
-    name: 'generateCookieStory',
+    name: 'generateCookieStoryFlow',
     inputSchema: StoryInputSchema,
     outputSchema: StoryOutputSchema,
   },
@@ -38,3 +38,7 @@ The story should be:
     return output!;
   }
 );
+
+export async function generateCookieStory(input: StoryInput) {
+    return await generateCookieStoryFlow(input);
+}
