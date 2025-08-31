@@ -15,23 +15,23 @@ const recipes = [
     description: 'Resep klasik yang tak lekang oleh waktu, menghadirkan kelembutan dan rasa nanas yang sempurna di setiap gigitan.',
     image: 'https://picsum.photos/600/400',
     hint: 'nastar cookie',
-    tags: ['Internal', 'Lebaran', 'Manis'],
+    tags: ['Best Seller', 'Manis', 'Klasik'],
   },
   {
-    title: 'Kue Semprit Keju',
-    slug: 'kue-semprit-keju',
-    description: 'Resep kue semprit keju yang renyah dan gurih, cocok untuk camilan atau suguhan di hari raya.',
+    title: 'Palm Cheese Cookies',
+    slug: 'palm-cheese',
+    description: 'Perpaduan unik rasa gurih dari keju edam dan manis dari gula palem. Renyah di luar, lembut di dalam.',
     image: 'https://picsum.photos/600/400',
-    hint: 'cheese spritz cookie',
-    tags: ['Internal', 'Gurih', 'Keju'],
+    hint: 'palm cheese cookie',
+    tags: ['Gurih', 'Manis', 'Unik'],
   },
   {
-    title: 'Putri Salju Lumer',
-    slug: 'putri-salju-lumer',
-    description: 'Kue putri salju lembut yang lumer di mulut, dengan taburan gula halus yang manis dan dingin.',
+    title: 'Lidah Kucing Renyah',
+    slug: 'lidah-kucing',
+    description: 'Kue tipis, renyah, dan ringan dengan rasa manis vanila yang lembut. Sempurna untuk teman minum teh.',
     image: 'https://picsum.photos/600/400',
-    hint: 'snow white cookie',
-    tags: ['Internal', 'Manis', 'Klasik'],
+    hint: 'cat tongue cookie',
+    tags: ['Best Seller', 'Renyah', 'Ringan'],
   },
     {
     title: 'Kastengel Keju Premium',
@@ -39,8 +39,24 @@ const recipes = [
     description: 'Resep Kastengel premium dengan cita rasa keju yang kuat dan tekstur renyah yang bikin nagih.',
     image: 'https://picsum.photos/600/400',
     hint: 'premium kaastengels',
-    tags: ['Internal', 'Gurih', 'Premium'],
+    tags: ['Gurih', 'Premium', 'Keju'],
   },
+  {
+    title: 'Choco Mede Cookies',
+    slug: 'choco-mede',
+    description: 'Kombinasi klasik cokelat premium dan kacang mede renyah. Manisnya pas, tidak berlebihan.',
+    image: 'https://picsum.photos/600/400',
+    hint: 'chocolate cashew cookie',
+    tags: ['Cokelat', 'Kacang', 'Manis'],
+  },
+  {
+    title: 'Stik Bawang Gunting',
+    slug: 'bawang-gunting',
+    description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Cocok untuk yang tidak terlalu suka manis.',
+    image: 'https://picsum.photos/600/400',
+    hint: 'savory snack',
+    tags: ['Gurih', 'Renyah', 'Asin'],
+  }
 ];
 
 const Header = () => (
@@ -84,7 +100,7 @@ export default function RecipesPage() {
             <BookHeart className="mx-auto h-12 w-12 text-primary mb-4" />
             <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Buku Resep Nasthara</h1>
             <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground">
-              Kumpulan resep rahasia dari dapur kami dan inspirasi dari para chef, kini untuk Anda coba di rumah. Selamat berkreasi!
+              Kumpulan resep rahasia dari dapur kami, kini untuk Anda coba di rumah. Selamat berkreasi!
             </p>
           </div>
         </section>

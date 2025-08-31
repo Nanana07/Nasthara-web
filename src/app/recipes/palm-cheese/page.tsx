@@ -8,16 +8,19 @@ import { Separator } from '@/components/ui/separator';
 import { Cookie, Printer, ShoppingCart, ChefHat, CheckCircle2, Home, BookHeart } from 'lucide-react';
 import type { Product } from '@/types/product';
 
-const lidahKucingProduct: Product = {
-    name: 'Lidah Kucing',
-    bestseller: true,
+const product: Product = {
+    name: 'Palm Cheese',
     flavors: [{
         name: 'Original',
-        description: 'Untuk obrolan ringan ditemani secangkir teh hangat dan kebahagiaan yang renyah.',
+        description: 'Saat keju gurih berpadu dengan manisnya gula aren, menciptakan kelezatan tak terduga.',
         image: 'https://picsum.photos/600/400',
-        hint: 'cat tongue cookie',
+        hint: 'palm cheese cookie',
         sizes: [
-            { size: '500 ml', price: 37000 },
+            { size: '330 ml', price: 27000 },
+            { size: '500 ml', price: 35000 },
+            { size: '750 ml', price: 45000 },
+            { size: '1000 ml', price: 50000 },
+            { size: '1 kg', price: 80000 },
         ],
     }]
 };
@@ -68,7 +71,7 @@ const Footer: React.FC = () => (
   </footer>
 );
 
-export default function PutriSaljuRecipePage() {
+export default function PalmCheeseRecipePage() {
     const handlePrint = () => {
         window.print();
     };
@@ -81,19 +84,19 @@ export default function PutriSaljuRecipePage() {
           <article>
             <header className="mb-8 text-center">
               <p className="text-primary font-semibold mb-2">Resep Pilihan Dapur Nasthara</p>
-              <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Putri Salju Lumer</h1>
+              <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Palm Cheese Cookies</h1>
               <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
-                Kue manis berbentuk bulan sabit yang dibalut gula halus, memberikan sensasi dingin dan lumer di mulut.
+                Kue kering dengan perpaduan rasa manis gula palem dan gurihnya keju yang unik, menciptakan sensasi rasa yang tak terlupakan.
               </p>
             </header>
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
                 src="https://picsum.photos/1200/600"
-                alt="Putri Salju"
+                alt="Palm Cheese Cookies"
                 width={1200}
                 height={600}
-                data-ai-hint="snow white cookies"
+                data-ai-hint="palm cheese cookies"
                 className="w-full object-cover"
               />
             </div>
@@ -109,15 +112,16 @@ export default function PutriSaljuRecipePage() {
                                     <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>200 gr Mentega</span></li>
                                     <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>50 gr Gula halus</span></li>
                                     <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>1 butir Kuning telur</span></li>
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>100 gr Kacang mede sangrai, haluskan</span></li>
                                     <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>250 gr Tepung terigu protein rendah</span></li>
+                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>30 gr Tepung maizena</span></li>
+                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>20 gr Susu bubuk</span></li>
+                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>100 gr Keju edam/parmesan parut</span></li>
                                 </ul>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-foreground mb-2">Taburan:</h3>
+                                <h3 className="font-semibold text-foreground mb-2">Lapisan:</h3>
                                 <ul className="space-y-2">
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>100 gr Gula halus</span></li>
-                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>50 gr Gula donat/gula dingin</span></li>
+                                    <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>Gula palem secukupnya</span></li>
                                 </ul>
                             </div>
                         </div>
@@ -129,33 +133,34 @@ export default function PutriSaljuRecipePage() {
                         <h2 className="text-2xl font-headline font-bold text-accent mb-4">Cara Membuat</h2>
                         <ol className="list-decimal list-outside space-y-4 pl-5 text-muted-foreground">
                             <li>Kocok mentega dan gula halus hingga lembut. Masukkan kuning telur, kocok rata.</li>
-                            <li>Masukkan kacang mede halus, aduk rata. Tambahkan tepung terigu sambil diayak, aduk dengan spatula hingga adonan bisa dibentuk.</li>
-                            <li>Ambil sedikit adonan, bentuk seperti bulan sabit. Tata di atas loyang.</li>
-                            <li>Panggang dalam oven suhu 140°C selama 25-30 menit. Jangan sampai terlalu coklat.</li>
-                            <li>Setelah matang, selagi masih panas, gulingkan kue ke dalam gula halus biasa.</li>
-                            <li>Setelah dingin, gulingkan kembali ke dalam gula donat agar lebih menempel dan memberikan sensasi dingin.</li>
+                            <li>Masukkan keju parut, aduk rata dengan spatula.</li>
+                            <li>Campurkan tepung terigu, maizena, dan susu bubuk. Ayak dan masukkan ke dalam adonan secara bertahap, aduk hingga rata.</li>
+                            <li>Bentuk adonan menjadi bola-bola kecil.</li>
+                            <li>Gulingkan bola adonan di atas gula palem hingga seluruh permukaannya tertutup.</li>
+                            <li>Tata di atas loyang yang sudah diolesi mentega. Beri sedikit tekanan di bagian atasnya.</li>
+                            <li>Panggang dalam oven dengan suhu 150°C selama 25-30 menit atau hingga matang.</li>
                         </ol>
                     </section>
                 </div>
                 <aside className="md:col-span-1 space-y-6">
                     <Card className="bg-card/80">
                         <CardHeader>
-                            <CardTitle className="text-xl font-headline">Suka yang Klasik & Renyah?</CardTitle>
-                            <CardDescription>Cobain Lidah Kucing, favorit sepanjang masa!</CardDescription>
+                            <CardTitle className="text-xl font-headline">Suka Kombinasi Unik?</CardTitle>
+                            <CardDescription>Pesan Palm Cheese original dari kami sekarang juga!</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="flex items-center gap-4 mb-4">
                                 <Image 
-                                    src={lidahKucingProduct.flavors[0].image} 
-                                    alt={lidahKucingProduct.name} 
+                                    src={product.flavors[0].image} 
+                                    alt={product.name} 
                                     width={80} 
                                     height={80} 
                                     className="rounded-md object-cover"
-                                    data-ai-hint={lidahKucingProduct.flavors[0].hint}
+                                    data-ai-hint={product.flavors[0].hint}
                                 />
                                 <div>
-                                    <h4 className="font-bold">{lidahKucingProduct.name}</h4>
-                                    <p className="text-sm text-muted-foreground">Mulai dari {formatPrice(lidahKucingProduct.flavors[0].sizes[0].price)}</p>
+                                    <h4 className="font-bold">{product.name}</h4>
+                                    <p className="text-sm text-muted-foreground">Mulai dari {formatPrice(product.flavors[0].sizes[0].price)}</p>
                                 </div>
                             </div>
                             <Button asChild className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">

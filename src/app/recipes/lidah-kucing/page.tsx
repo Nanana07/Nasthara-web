@@ -8,16 +8,18 @@ import { Separator } from '@/components/ui/separator';
 import { Cookie, Printer, ShoppingCart, ChefHat, CheckCircle2, Home, BookHeart } from 'lucide-react';
 import type { Product } from '@/types/product';
 
-const palmCheeseProduct: Product = {
-    name: 'Palm Cheese',
+const product: Product = {
+    name: 'Lidah Kucing',
+    bestseller: true,
     flavors: [{
         name: 'Original',
-        description: 'Saat keju gurih berpadu dengan manisnya gula aren, menciptakan kelezatan tak terduga.',
+        description: 'Untuk obrolan ringan ditemani secangkir teh hangat dan kebahagiaan yang renyah.',
         image: 'https://picsum.photos/600/400',
-        hint: 'palm cheese cookie',
+        hint: 'cat tongue cookie',
         sizes: [
-            { size: '330 ml', price: 27000 },
-            { size: '500 ml', price: 35000 },
+            { size: '500 ml', price: 37000 },
+            { size: '3 pcs', price: 100000 },
+            { size: '1 kg', price: 80000 },
         ],
     }]
 };
@@ -68,8 +70,7 @@ const Footer: React.FC = () => (
   </footer>
 );
 
-
-export default function KueSempritKejuRecipePage() {
+export default function LidahKucingRecipePage() {
     const handlePrint = () => {
         window.print();
     };
@@ -82,19 +83,19 @@ export default function KueSempritKejuRecipePage() {
           <article>
             <header className="mb-8 text-center">
               <p className="text-primary font-semibold mb-2">Resep Pilihan Dapur Nasthara</p>
-              <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Kue Semprit Keju</h1>
+              <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Lidah Kucing Renyah</h1>
               <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
-                Kue kering klasik dengan bentuk bunga yang cantik, rasa keju yang gurih, dan tekstur renyah yang meleleh di mulut.
+                Resep kue kering tipis dan renyah yang klasik. Sempurna sebagai teman minum teh atau kopi di sore hari.
               </p>
             </header>
 
             <div className="mb-8 overflow-hidden rounded-lg shadow-lg">
               <Image
                 src="https://picsum.photos/1200/600"
-                alt="Kue Semprit Keju"
+                alt="Lidah Kucing"
                 width={1200}
                 height={600}
-                data-ai-hint="cheese spritz cookies"
+                data-ai-hint="cat tongue cookies"
                 className="w-full object-cover"
               />
             </div>
@@ -104,13 +105,13 @@ export default function KueSempritKejuRecipePage() {
                     <section className="mb-8">
                         <h2 className="text-2xl font-headline font-bold text-accent mb-4">Bahan-bahan</h2>
                         <ul className="space-y-2 text-muted-foreground">
-                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>200 gr Mentega</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>125 gr Mentega</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>125 gr Margarin</span></li>
                             <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>150 gr Gula halus</span></li>
-                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>2 butir Kuning telur</span></li>
-                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>300 gr Tepung terigu protein rendah</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>1/2 sdt Ekstrak vanila</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>100 ml Putih telur</span></li>
+                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>200 gr Tepung terigu protein sedang</span></li>
                             <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>50 gr Tepung maizena</span></li>
-                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>100 gr Keju edam parut</span></li>
-                            <li className="flex items-start"><CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 shrink-0" /><span>Choco chips untuk hiasan</span></li>
                         </ul>
                     </section>
                     
@@ -119,35 +120,35 @@ export default function KueSempritKejuRecipePage() {
                     <section>
                         <h2 className="text-2xl font-headline font-bold text-accent mb-4">Cara Membuat</h2>
                         <ol className="list-decimal list-outside space-y-4 pl-5 text-muted-foreground">
-                            <li>Kocok mentega dan gula halus hingga lembut dan pucat. Masukkan kuning telur, kocok kembali hingga rata.</li>
-                            <li>Campurkan tepung terigu dan tepung maizena, ayak, lalu masukkan ke dalam adonan mentega secara bertahap. Aduk dengan spatula.</li>
-                            <li>Tambahkan keju edam parut, aduk hingga rata.</li>
-                            <li>Masukkan adonan ke dalam piping bag yang sudah diberi spuit bentuk bunga.</li>
-                            <li>Semprotkan adonan ke atas loyang yang sudah diolesi mentega. Beri choco chip di tengahnya.</li>
-                            <li>Panggang dalam oven dengan suhu 150°C selama 25-30 menit atau hingga matang dan berwarna keemasan.</li>
-                            <li>Angkat dan dinginkan sebelum disimpan di dalam toples.</li>
+                            <li>Kocok mentega, margarin, gula halus, dan vanila hingga putih dan mengembang.</li>
+                            <li>Masukkan putih telur sedikit demi sedikit sambil terus dikocok dengan kecepatan rendah hingga rata.</li>
+                            <li>Campurkan tepung terigu dan maizena, ayak, lalu masukkan ke dalam adonan secara bertahap. Aduk dengan spatula hingga rata.</li>
+                            <li>Masukkan adonan ke dalam kantong segitiga (piping bag).</li>
+                            <li>Siapkan loyang khusus lidah kucing, olesi tipis dengan margarin. Semprotkan adonan memanjang di setiap cekungan.</li>
+                            <li>Panggang dalam oven suhu 140°C selama 20-25 menit atau hingga pinggirnya berwarna kecoklatan.</li>
+                            <li>Setelah matang, segera lepaskan dari loyang selagi panas agar tidak lengket. Dinginkan.</li>
                         </ol>
                     </section>
                 </div>
                 <aside className="md:col-span-1 space-y-6">
                     <Card className="bg-card/80">
                         <CardHeader>
-                            <CardTitle className="text-xl font-headline">Suka yang Gurih?</CardTitle>
-                            <CardDescription>Coba perpaduan unik keju dan gula palem dari kami!</CardDescription>
+                            <CardTitle className="text-xl font-headline">Mau yang Langsung Jadi?</CardTitle>
+                            <CardDescription>Pesan Lidah Kucing Bestseller kami, dijamin renyah!</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="flex items-center gap-4 mb-4">
                                 <Image 
-                                    src={palmCheeseProduct.flavors[0].image} 
-                                    alt={palmCheeseProduct.name} 
+                                    src={product.flavors[0].image} 
+                                    alt={product.name} 
                                     width={80} 
                                     height={80} 
                                     className="rounded-md object-cover"
-                                    data-ai-hint={palmCheeseProduct.flavors[0].hint}
+                                    data-ai-hint={product.flavors[0].hint}
                                 />
                                 <div>
-                                    <h4 className="font-bold">{palmCheeseProduct.name}</h4>
-                                    <p className="text-sm text-muted-foreground">Mulai dari {formatPrice(palmCheeseProduct.flavors[0].sizes[0].price)}</p>
+                                    <h4 className="font-bold">{product.name}</h4>
+                                    <p className="text-sm text-muted-foreground">Mulai dari {formatPrice(product.flavors[0].sizes[0].price)}</p>
                                 </div>
                             </div>
                             <Button asChild className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
