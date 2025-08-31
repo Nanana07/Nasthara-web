@@ -1,10 +1,11 @@
+
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Cookie, Printer, ShoppingCart, ChefHat, CheckCircle2, Home } from 'lucide-react';
+import { Cookie, Printer, ShoppingCart, ChefHat, CheckCircle2, Home, BookHeart } from 'lucide-react';
 import type { Product } from '@/types/product';
 
 const nastarProduct: Product = {
@@ -64,7 +65,8 @@ const Header = () => (
             </Button>
             <Button variant="ghost" asChild>
                 <Link href="/recipes">
-                    Resep
+                    <BookHeart className="h-5 w-5 mr-2" />
+                    <span className="hidden sm:inline">Resep</span>
                 </Link>
             </Button>
         </nav>

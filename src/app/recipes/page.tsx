@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Cookie, BookHeart, ExternalLink } from 'lucide-react';
+import { ArrowRight, Cookie, BookHeart } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 const recipes = [
@@ -19,27 +19,27 @@ const recipes = [
   },
   {
     title: 'Kue Semprit Keju',
-    url: 'https://cookpad.com/id/resep/16997420-kue-semprit-keju',
+    slug: 'kue-semprit-keju',
     description: 'Resep kue semprit keju yang renyah dan gurih, cocok untuk camilan atau suguhan di hari raya.',
     image: 'https://picsum.photos/600/400',
     hint: 'cheese spritz cookie',
-    tags: ['Eksternal', 'Gurih', 'Keju'],
+    tags: ['Internal', 'Gurih', 'Keju'],
   },
   {
     title: 'Putri Salju Lumer',
-    url: 'https://www.masakapahariini.com/resep/resep-putri-salju-spesial-untuk-lebaran/',
+    slug: 'putri-salju-lumer',
     description: 'Kue putri salju lembut yang lumer di mulut, dengan taburan gula halus yang manis dan dingin.',
     image: 'https://picsum.photos/600/400',
     hint: 'snow white cookie',
-    tags: ['Eksternal', 'Manis', 'Klasik'],
+    tags: ['Internal', 'Manis', 'Klasik'],
   },
     {
     title: 'Kastengel Keju Premium',
-    url: 'https://www.fimela.com/food/read/4953931/resep-kastengel-keju-premium-yang-renyah-dan-tidak-mudah-hancur',
+    slug: 'kastengel-keju-premium',
     description: 'Resep Kastengel premium dengan cita rasa keju yang kuat dan tekstur renyah yang bikin nagih.',
     image: 'https://picsum.photos/600/400',
     hint: 'premium kaastengels',
-    tags: ['Eksternal', 'Gurih', 'Premium'],
+    tags: ['Internal', 'Gurih', 'Premium'],
   },
 ];
 
@@ -93,13 +93,12 @@ export default function RecipesPage() {
           <div className="container mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {recipes.map((recipe, index) => {
-                const isExternal = !!recipe.url;
-                const href = isExternal ? recipe.url : `/recipes/${recipe.slug}`;
+                const href = `/recipes/${recipe.slug}`;
                 
                 return (
                     <Card key={index} className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg hover:shadow-primary/20 bg-card">
                     <CardHeader className="p-0 relative">
-                        <Link href={href!} target={isExternal ? '_blank' : '_self'} rel={isExternal ? 'noopener noreferrer' : ''} className="aspect-video overflow-hidden w-full cursor-pointer block">
+                        <Link href={href} className="aspect-video overflow-hidden w-full cursor-pointer block">
                         <Image
                             src={recipe.image}
                             alt={recipe.title}
@@ -119,8 +118,8 @@ export default function RecipesPage() {
                         ))}
                         </div>
                         <Button asChild className="w-full mt-auto bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 transform group-hover:-translate-y-1">
-                        <Link href={href!} target={isExternal ? '_blank' : '_self'} rel={isExternal ? 'noopener noreferrer' : ''}>
-                            Lihat Resep {isExternal ? <ExternalLink className="ml-2 h-4 w-4" /> : <ArrowRight className="ml-2 h-4 w-4" />}
+                        <Link href={href}>
+                            Lihat Resep <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
                         </Button>
                     </CardContent>
@@ -135,4 +134,3 @@ export default function RecipesPage() {
     </div>
   );
 }
-
