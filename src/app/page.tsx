@@ -176,7 +176,7 @@ const CartDialogFormSchema = z.object({
 
 type CartDialogFormValues = z.infer<typeof CartDialogFormSchema>;
 
-const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
+const Header: FC<{ onCartClick: () => void; showHomeButton?: boolean }> = ({ onCartClick, showHomeButton = true }) => {
   const { cartCount } = useCart();
   return (
     <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
@@ -186,12 +186,14 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
           <span className="text-xl sm:text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center shrink-0">
-            <Button variant="ghost" asChild>
-                <Link href="/">
-                    <HomeIcon className="h-5 w-5 sm:mr-2" />
-                    <span className="hidden sm:inline">Home</span>
-                </Link>
-            </Button>
+            {showHomeButton && (
+              <Button variant="ghost" asChild>
+                  <Link href="/">
+                      <HomeIcon className="h-5 w-5 sm:mr-2" />
+                      <span className="hidden sm:inline">Home</span>
+                  </Link>
+              </Button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="group">
@@ -933,18 +935,18 @@ const ProductDetailDialog: FC<{
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0 bg-card">
-        <div className="grid md:grid-cols-2">
-           <div className="order-1">
+        <div className="flex flex-col">
+           <div className="w-full aspect-[4/3] overflow-hidden">
              <Image
               src={selectedFlavor.image}
               alt={`${product.name} - ${selectedFlavor.name}`}
               width={800}
               height={600}
               data-ai-hint={selectedFlavor.hint}
-              className="object-cover w-full h-full md:rounded-l-lg"
+              className="object-cover w-full h-full"
             />
           </div>
-          <div className="p-6 sm:p-8 flex flex-col order-2">
+          <div className="p-6 sm:p-8 flex flex-col">
             <DialogHeader className="text-left">
               <DialogTitle className="font-headline text-3xl mb-2 text-accent">{product.name}</DialogTitle>
               <DialogDescription className="text-base">
@@ -1058,7 +1060,7 @@ const Footer: FC = () => (
   </footer>
 );
 
-export default function HomePage() {
+export default function Home() {
   const [isCartOpen, setCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isProductDetailOpen, setProductDetailOpen] = useState(false);
@@ -1078,7 +1080,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-background font-body text-foreground">
-      <Header onCartClick={() => setCartOpen(true)} />
+      <Header onCartClick={() => setCartOpen(true)} showHomeButton={false} />
       <main>
         <HeroSection />
         <AboutSection />

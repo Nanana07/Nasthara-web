@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, BookHeart, Heart, Instagram, Home } from 'lucide-react';
+import { ArrowRight, BookHeart, Heart, Instagram, Home as HomeIcon } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
@@ -64,13 +64,13 @@ const Header = () => (
   <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 group">
-          <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
+          <Logo />
           <span className="text-xl sm:text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center shrink-0">
             <Button variant="ghost" asChild>
                 <Link href="/">
-                    <Home className="h-5 w-5 sm:mr-2" />
+                    <HomeIcon className="h-5 w-5 sm:mr-2" />
                     <span className="hidden sm:inline">Home</span>
                 </Link>
             </Button>
