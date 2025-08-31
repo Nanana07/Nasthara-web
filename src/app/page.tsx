@@ -31,8 +31,11 @@ const products: Product[] = [
         hint: 'nastar cookie',
         bestseller: true,
         variants: [
-            { size: '250gr', price: 45000 },
-            { size: '500gr', price: 65000 },
+            { size: '330 ml', price: 45000 },
+            { size: '500 ml', price: 65000 },
+            { size: '750 ml', price: 75000 },
+            { size: '1000 ml', price: 85000 },
+            { size: '1 kg', price: 110000 },
         ],
     },
     {
@@ -41,8 +44,11 @@ const products: Product[] = [
         image: 'https://picsum.photos/600/400',
         hint: 'palm cheese cookie',
         variants: [
-            { size: '250gr', price: 27000 },
-            { size: '500gr', price: 35000 },
+            { size: '330 ml', price: 27000 },
+            { size: '500 ml', price: 35000 },
+            { size: '750 ml', price: 45000 },
+            { size: '1000 ml', price: 50000 },
+            { size: '1 kg', price: 80000 },
         ],
     },
     {
@@ -52,7 +58,9 @@ const products: Product[] = [
         hint: 'cat tongue cookie',
         bestseller: true,
         variants: [
-            { size: '500ml', price: 37000 },
+            { size: '500 ml', price: 37000 },
+            { size: '3 pcs', price: 100000 },
+            { size: '1 kg', price: 80000 },
         ],
     },
     {
@@ -61,7 +69,7 @@ const products: Product[] = [
         image: 'https://picsum.photos/600/400',
         hint: 'kaasstengels cheese',
         variants: [
-            { size: '500ml', price: 70000 },
+            { size: '500 ml', price: 70000 },
         ],
     },
     {
@@ -70,8 +78,10 @@ const products: Product[] = [
         image: 'https://picsum.photos/600/400',
         hint: 'chocolate cashew cookie',
         variants: [
-            { size: '250gr', price: 40000 },
-            { size: '500gr', price: 55000 },
+            { size: '330 ml', price: 40000 },
+            { size: '500 ml', price: 55000 },
+            { size: '750 ml', price: 65000 },
+            { size: '1000 ml', price: 70000 },
         ],
     },
     {
@@ -80,8 +90,9 @@ const products: Product[] = [
         image: 'https://picsum.photos/600/400',
         hint: 'savory snack',
         variants: [
-            { size: '100gr', price: 8000 },
-            { size: '200gr', price: 15000 },
+            { size: 'Pouch', price: 8000 },
+            { size: '1/2 kg', price: 40000 },
+            { size: '1 kg', price: 75000 },
         ],
     },
 ];
