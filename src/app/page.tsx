@@ -22,7 +22,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
@@ -175,10 +175,6 @@ const CartDialogFormSchema = z.object({
 
 type CartDialogFormValues = z.infer<typeof CartDialogFormSchema>;
 
-const HalalLogo: FC<{ className?: string }> = ({ className }) => (
-    <Image src="/halal-mui.png" alt="Logo Halal MUI" width={40} height={40} className={className} />
-);
-
 const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
   const { cartCount } = useCart();
   return (
@@ -229,7 +225,10 @@ const HeroSection: FC = () => (
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '500ms' }}>
         <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-          <a href="#products">Order Now</a>
+          <a href="#products">
+            <ShoppingCart className="mr-2 h-5 w-5" />
+            Order Now
+          </a>
         </Button>
         <Button asChild size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10">
           <a href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer">
@@ -455,7 +454,7 @@ const ProductSection: FC<{ onProductSelect: (product: Product) => void }> = ({ o
         <div className="flex justify-center items-center gap-4 mb-12 text-center">
             <h2 className="text-3xl md:text-4xl font-headline font-bold text-accent">Our Delights</h2>
             <div className="flex items-center gap-2 bg-background p-2 rounded-md shadow-sm">
-                <HalalLogo className="h-10 w-10" />
+                <Image src="/halal-mui.png" alt="Logo Halal MUI" width={40} height={40} />
                  <p className="text-xs text-green-700 font-semibold leading-tight">TERSERTIFIKASI<br/>HALAL<br/>INDONESIA</p>
             </div>
         </div>
@@ -514,10 +513,6 @@ const TestimonialSection: FC = () => (
   </section>
 );
 
-const ShopeeIcon: FC<{ className?: string }> = ({ className }) => (
-    <Image src="/shopee.png" alt="Logo Shopee" width={20} height={20} className={className} />
-);
-
 const SeasonalSection: FC = () => (
   <section className="py-20 px-4">
      <div className="container mx-auto text-center max-w-3xl">
@@ -532,7 +527,7 @@ const SeasonalSection: FC = () => (
           </Button>
           <Button asChild size="lg" variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-500/10 hover:text-orange-600">
             <a href="https://shopee.co.id/nasthar_a" target="_blank" rel="noopener noreferrer" className="flex items-center">
-              <ShopeeIcon className="mr-2 h-5 w-5" /> Belanja di Shopee
+               <Image src="/shopee.png" alt="Logo Shopee" width={20} height={20} className="mr-2" /> Belanja di Shopee
             </a>
           </Button>
         </div>
