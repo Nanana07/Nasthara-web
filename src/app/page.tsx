@@ -29,7 +29,6 @@ import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/Logo';
-import { WhatsappIcon } from '@/components/WhatsappIcon';
 
 
 const products: Product[] = [
@@ -212,7 +211,7 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
           </Link>
           <Link href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
             <Button variant="ghost" size="icon" className="group">
-              <WhatsappIcon className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
+              <Image src="/whatsapp.png" alt="WhatsApp Icon" width={24} height={24} className="group-hover:scale-110 transition-transform" />
             </Button>
           </Link>
         </nav>
@@ -234,7 +233,7 @@ const HeroSection: FC = () => (
         </Button>
         <Button asChild size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10">
           <a href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer">
-            <WhatsappIcon className="mr-2 h-5 w-5" /> Hubungi Kami
+             <Image src="/whatsapp.png" alt="WhatsApp Icon" width={20} height={20} className="mr-2" /> Hubungi Kami
           </a>
         </Button>
       </div>
