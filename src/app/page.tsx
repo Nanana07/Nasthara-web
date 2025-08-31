@@ -145,18 +145,18 @@ const allProductFlavors: (ProductFlavorVariant & { productName: string, bestsell
 
 const testimonials = [
   {
-    name: 'Sarah K.',
-    quote: "Nasthara benar-benar membawa pulang rasa Lebaran! Nastarnya meleleh di lidah, persis kayak buatan Ibu.",
+    name: 'Nana',
+    quote: "wah enak banget ini, selain rasa tampilannya juga cantik. pokoknya beauty outside, melt on your mouth inside.",
     stars: 5,
   },
   {
-    name: 'Budi A.',
-    quote: "Cokelat medenya juara! Pengiriman cepat dan packaging-nya premium banget. Bakal repeat order!",
+    name: 'Rian',
+    quote: "Gila sih Palm Cheese-nya, nagih banget. Gurihnya keju sama manis gula palem tuh pas, gak nyangka bisa seenak ini.",
     stars: 5,
   },
   {
-    name: 'Dewi R.',
-    quote: "Setiap gigitan lidah kucingnya bikin nostalgia masa kecil. Ini bukan cuma kue, tapi mesin waktu!",
+    name: 'Fitri',
+    quote: "Order buat acara keluarga, semua pada suka! Nastarnya the best, lumer banget. Auto jadi langganan.",
     stars: 5,
   },
 ];
@@ -1099,4 +1099,3 @@ export default function Home() {
   );
 }
 
-    
