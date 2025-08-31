@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -49,9 +48,9 @@ const Header = () => (
                 </Link>
             </Button>
             <Button variant="ghost" asChild>
-                <Link href="/recipes">
+                <Link href="/blog">
                      <BookHeart className="h-5 w-5 mr-2" />
-                    <span className="hidden sm:inline">Resep</span>
+                    <span className="hidden sm:inline">Blog</span>
                 </Link>
             </Button>
         </nav>
@@ -84,7 +83,7 @@ export default function PalmCheeseRecipePage() {
         <div className="max-w-4xl mx-auto">
           <article>
             <header className="mb-8 text-center">
-              <p className="text-primary font-semibold mb-2">Resep Pilihan Dapur Nasthara</p>
+              <p className="text-primary font-semibold mb-2">Blog Internal Dapur Nasthara</p>
               <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Palm Cheese Cookies</h1>
               <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
                 Kue kering dengan perpaduan rasa manis gula palem dan gurihnya keju yang unik, menciptakan sensasi rasa yang tak terlupakan.
