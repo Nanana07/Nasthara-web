@@ -6,10 +6,11 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles } from 'lucide-react';
+import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
+import { RecommendationInputSchema, type RecommendationInput } from '@/ai/flows/recommend-cookie-types';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -20,7 +21,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from '@/components/ui/label';
 
@@ -566,30 +566,27 @@ const MidCtaSection: FC = () => (
   </section>
 );
 
-const RecommendationFormSchema = z.object({
-  preference: z.string().min(5, { message: "Ceritakan sedikit preferensi Anda (min. 5 karakter)." }),
-});
-type RecommendationFormValues = z.infer<typeof RecommendationFormSchema>;
-
 const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [recommendation, setRecommendation] = useState<{name: string, reason: string} | null>(null);
     const [error, setError] = useState<string | null>(null);
     const resultRef = useRef<HTMLDivElement>(null);
     
-    const form = useForm<RecommendationFormValues>({
-        resolver: zodResolver(RecommendationFormSchema),
+    const form = useForm<RecommendationInput>({
+        resolver: zodResolver(RecommendationInputSchema),
         defaultValues: {
-            preference: "",
+            baseFlavor: 'Manis',
+            texture: 'Renyah',
+            specialIngredient: 'Keju',
         },
     });
 
-    const onSubmit = async (values: RecommendationFormValues) => {
+    const onSubmit = async (values: RecommendationInput) => {
         setIsLoading(true);
         setRecommendation(null);
         setError(null);
         try {
-            const result = await recommendCookie(values.preference);
+            const result = await recommendCookie(values);
             setRecommendation(result);
         } catch (e) {
             setError("Maaf, terjadi kesalahan saat membuat rekomendasi. Coba lagi nanti.");
@@ -615,27 +612,90 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
                 <Card className="p-8 shadow-2xl bg-card/95 backdrop-blur-sm">
                     <CardHeader className="text-center p-0 mb-6">
                         <Wand2 className="mx-auto h-10 w-10 text-primary mb-4" />
-                        <CardTitle className="text-3xl font-headline text-accent">Not Sure What to Choose?</CardTitle>
-                        <CardDescription className="text-lg">Let our AI find the perfect cookie for you!</CardDescription>
+                        <CardTitle className="text-3xl font-headline text-accent">Dapur Ajaib Nasthara</CardTitle>
+                        <CardDescription className="text-lg">Sulap kombinasi favoritmu menjadi kue!</CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
                          <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                
                                 <FormField
-                                control={form.control}
-                                name="preference"
-                                render={({ field }) => (
+                                  control={form.control}
+                                  name="baseFlavor"
+                                  render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>Tell us what you like</FormLabel>
-                                    <FormControl>
-                                        <Textarea placeholder="e.g. 'Saya suka kue yang tidak terlalu manis, gurih, dan ada kejunya.' atau 'Cari yang paling cocok untuk teman minum teh.'" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
+                                      <FormLabel className="text-lg font-semibold flex items-center gap-2"><CakeSlice/> Dasar Rasa</FormLabel>
+                                      <FormControl>
+                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-3 gap-4 pt-2">
+                                          {['Manis', 'Gurih', 'Kombinasi'].map(value => (
+                                            <FormItem key={value}>
+                                              <FormControl>
+                                                <RadioGroupItem value={value} id={`flavor-${value}`} className="sr-only"/>
+                                              </FormControl>
+                                              <Label htmlFor={`flavor-${value}`} className={cn("block w-full text-center p-4 border rounded-lg cursor-pointer", field.value === value && "bg-primary text-primary-foreground border-primary")}>
+                                                {value}
+                                              </Label>
+                                            </FormItem>
+                                          ))}
+                                        </RadioGroup>
+                                      </FormControl>
+                                      <FormMessage />
                                     </FormItem>
-                                )}
+                                  )}
                                 />
-                                <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                                    {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Finding your soul-cookie...</> : "Get Recommendation"}
+
+                                <FormField
+                                  control={form.control}
+                                  name="texture"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-lg font-semibold flex items-center gap-2"><ChefHat/> Tekstur</FormLabel>
+                                      <FormControl>
+                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-3 gap-4 pt-2">
+                                          {['Renyah', 'Lembut', 'Lumer'].map(value => (
+                                            <FormItem key={value}>
+                                               <FormControl>
+                                                <RadioGroupItem value={value} id={`texture-${value}`} className="sr-only"/>
+                                               </FormControl>
+                                               <Label htmlFor={`texture-${value}`} className={cn("block w-full text-center p-4 border rounded-lg cursor-pointer", field.value === value && "bg-primary text-primary-foreground border-primary")}>
+                                                {value}
+                                              </Label>
+                                            </FormItem>
+                                          ))}
+                                        </RadioGroup>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+
+                                <FormField
+                                  control={form.control}
+                                  name="specialIngredient"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-lg font-semibold flex items-center gap-2"><Wheat/> Bahan Spesial</FormLabel>
+                                      <FormControl>
+                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                                          {['Keju', 'Cokelat', 'Kacang', 'Buah'].map(value => (
+                                            <FormItem key={value}>
+                                               <FormControl>
+                                                <RadioGroupItem value={value} id={`ingredient-${value}`} className="sr-only"/>
+                                               </FormControl>
+                                               <Label htmlFor={`ingredient-${value}`} className={cn("block w-full text-center p-4 border rounded-lg cursor-pointer", field.value === value && "bg-primary text-primary-foreground border-primary")}>
+                                                {value}
+                                              </Label>
+                                            </FormItem>
+                                          ))}
+                                        </RadioGroup>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                
+                                <Button type="submit" disabled={isLoading} size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground !mt-8 text-base">
+                                    {isLoading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Meracik adonan ajaib...</> : <><Wand2 className="mr-2 h-5 w-5" /> Aduk Adonan!</>}
                                  </Button>
                             </form>
                         </Form>
@@ -645,7 +705,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
                         {recommendation && recommendedProductFlavor && recommendedProduct && (
                             <div ref={resultRef} className="mt-8 text-center animate-in fade-in-up">
                                 <Separator className="my-6"/>
-                                <h3 className="text-2xl font-headline font-bold text-accent mb-4">Our Recommendation For You!</h3>
+                                <h3 className="text-2xl font-headline font-bold text-accent mb-4">Resep Ajaib-mu Sudah Jadi!</h3>
                                 <Card className="overflow-hidden">
                                      <Image
                                         src={recommendedProductFlavor.image}
@@ -663,7 +723,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
                                     <CardContent>
                                         <p className="text-muted-foreground italic mb-4">"{recommendation.reason}"</p>
                                         <Button onClick={() => onProductSelect(recommendedProduct)} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                                          View Product
+                                          Lihat Produk
                                         </Button>
                                     </CardContent>
                                 </Card>
@@ -713,7 +773,7 @@ const ProductDetailDialog: FC<{
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-3xl grid-cols-1 md:grid-cols-2 grid gap-0 p-0 bg-card">
-        <div className="p-0 overflow-hidden rounded-l-lg">
+        <div className="p-0 overflow-hidden rounded-l-lg hidden md:block">
            <Image
             src={selectedFlavor.image}
             alt={`${product.name} - ${selectedFlavor.name}`}
@@ -724,6 +784,16 @@ const ProductDetailDialog: FC<{
           />
         </div>
         <div className="p-8 flex flex-col">
+          <div className="block md:hidden p-0 overflow-hidden rounded-t-lg -m-8 mb-8">
+             <Image
+              src={selectedFlavor.image}
+              alt={`${product.name} - ${selectedFlavor.name}`}
+              width={800}
+              height={600}
+              data-ai-hint={selectedFlavor.hint}
+              className="object-cover w-full h-48"
+            />
+          </div>
           <DialogHeader className="text-left">
             <DialogTitle className="font-headline text-3xl mb-2 text-accent">{product.name}</DialogTitle>
             <DialogDescription className="text-base">
@@ -841,6 +911,14 @@ export default function Home() {
     setSelectedProduct(product);
     setProductDetailOpen(true);
   }
+
+  const handleRecommendationSelect = (productName: string) => {
+    const product = products.find(p => p.name === productName);
+    if (product) {
+      handleProductSelect(product);
+    }
+  }
+
 
   return (
     <div className="bg-background font-body text-foreground">

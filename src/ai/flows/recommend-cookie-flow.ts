@@ -5,7 +5,7 @@
  * - recommendCookie - A function that handles the cookie recommendation process.
  */
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
+import { RecommendationInputSchema, RecommendationOutputSchema, type RecommendationInput } from '@/ai/flows/recommend-cookie-types';
 
 const products = [
     { name: 'Nastar', description: 'Manis, lumer di mulut, dengan isian selai nanas premium. Klasik dan selalu jadi favorit.' },
@@ -16,24 +16,20 @@ const products = [
     { name: 'Bawang Gunting', description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Cocok untuk yang tidak terlalu suka manis.' },
 ];
 
-const RecommendationInputSchema = z.string();
-
-const RecommendationOutputSchema = z.object({
-  name: z.string().describe('The name of the recommended cookie. Must be one of the available products.'),
-  reason: z.string().describe('A brief, friendly, and persuasive reason (in Indonesian) why this cookie is recommended for the user based on their preference.'),
-});
-
-export async function recommendCookie(preference: string): Promise<z.infer<typeof RecommendationOutputSchema>> {
+export async function recommendCookie(input: RecommendationInput) {
     const productList = products.map(p => `- ${p.name}: ${p.description}`).join('\n');
 
-    const prompt = `You are a friendly and expert bakery assistant for "Nasthara". Your goal is to recommend the perfect cookie to a customer based on their preferences.
+    const prompt = `You are a friendly and expert bakery assistant for "Nasthara". Your goal is to recommend the perfect cookie to a customer based on their preferences for flavor, texture, and special ingredients.
 
     Here are the available cookies:
     ${productList}
 
-    Customer's preference: "${preference}"
+    The customer has created a "magic recipe" with these characteristics:
+    - Base Flavor: "${input.baseFlavor}"
+    - Texture: "${input.texture}"
+    - Special Ingredient: "${input.specialIngredient}"
 
-    Based on the customer's preference, choose the ONE most suitable cookie from the list. Provide a short, friendly, and persuasive reason for your recommendation in Indonesian. Your response must be in a valid JSON format.`;
+    Based on this combination, choose the ONE most suitable cookie from the list. Provide a short, friendly, and persuasive reason for your recommendation in Indonesian. Frame the reason as if you've just magically concocted this cookie for them. Your response must be in a valid JSON format.`;
 
     const { output } = await ai.generate({
         prompt,
