@@ -6,6 +6,7 @@
  */
 import { ai } from '@/ai/genkit';
 import { RecommendationInputSchema, RecommendationOutputSchema, type RecommendationInput } from '@/ai/flows/recommend-cookie-types';
+import { defineFlow } from 'genkit/flow';
 
 const products = [
     { name: 'Nastar', description: 'Manis, lumer di mulut, dengan isian selai nanas premium. Klasik dan selalu jadi favorit.' },
@@ -16,7 +17,13 @@ const products = [
     { name: 'Bawang Gunting', description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Cocok untuk yang tidak terlalu suka manis.' },
 ];
 
-export async function recommendCookie(input: RecommendationInput) {
+export const recommendCookie = defineFlow(
+  {
+    name: 'recommendCookie',
+    inputSchema: RecommendationInputSchema,
+    outputSchema: RecommendationOutputSchema,
+  },
+  async (input: RecommendationInput) => {
     const productList = products.map(p => `- ${p.name}: ${p.description}`).join('\n');
 
     const prompt = `You are a friendly and expert bakery assistant for "Nasthara". Your goal is to recommend the perfect cookie to a customer based on their preferences for flavor, texture, and special ingredients.
@@ -39,4 +46,5 @@ export async function recommendCookie(input: RecommendationInput) {
     });
     
     return output!;
-}
+  }
+);

@@ -6,6 +6,7 @@
  */
 import { ai } from '@/ai/genkit';
 import { GiftAssistantInputSchema, GiftAssistantOutputSchema, type GiftAssistantInput } from '@/ai/flows/gift-assistant-types';
+import { defineFlow } from 'genkit/flow';
 
 const products = [
     { name: 'Nastar', description: 'Manis, lumer di mulut, dengan isian selai nanas premium. Klasik dan selalu jadi favorit, cocok untuk hadiah bagi orang tua atau acara formal.' },
@@ -16,7 +17,13 @@ const products = [
     { name: 'Bawang Gunting', description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Pilihan tepat untuk hadiah bagi yang tidak terlalu suka manis atau sebagai teman nonton.' },
 ];
 
-export async function recommendGift(input: GiftAssistantInput) {
+export const recommendGift = defineFlow(
+  {
+    name: 'recommendGift',
+    inputSchema: GiftAssistantInputSchema,
+    outputSchema: GiftAssistantOutputSchema,
+  },
+  async (input: GiftAssistantInput) => {
     const productList = products.map(p => `- ${p.name}: ${p.description}`).join('\n');
 
     const prompt = `You are "Asisten Kado Nasthara", a friendly and thoughtful gift expert for a bakery. Your task is to recommend the perfect cookie gift based on the customer's description.
@@ -37,4 +44,5 @@ export async function recommendGift(input: GiftAssistantInput) {
     });
     
     return output!;
-}
+  }
+);

@@ -7,14 +7,14 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart, Heart, Home as HomeIcon } from 'lucide-react';
+import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart, Heart, HomeIcon } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
-import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
-import { RecommendationInputSchema, type RecommendationInput } from '@/ai/flows/recommend-cookie-types';
-import { generateCookieStory } from '@/ai/flows/story-generator-flow';
-import { recommendGift } from '@/ai/flows/gift-assistant-flow';
-import { GiftAssistantInputSchema, type GiftAssistantInput } from '@/ai/flows/gift-assistant-types';
+import { type RecommendationInput, RecommendationInputSchema, type RecommendationOutput } from '@/ai/flows/recommend-cookie-types';
+import { type StoryInput, type StoryOutput } from '@/ai/flows/story-generator-types';
+import { type GiftAssistantInput, GiftAssistantInputSchema, type GiftAssistantOutput } from '@/ai/flows/gift-assistant-types';
+import { runFlow } from '@genkit-ai/next/client';
+
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -583,7 +583,7 @@ const MidCtaSection: FC = () => (
 
 const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [recommendation, setRecommendation] = useState<{name: string, reason: string} | null>(null);
+    const [recommendation, setRecommendation] = useState<RecommendationOutput | null>(null);
     const [error, setError] = useState<string | null>(null);
     const resultRef = useRef<HTMLDivElement>(null);
     
@@ -607,7 +607,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
         setStory(null);
         setStoryError(null);
         try {
-            const result = await recommendCookie(values);
+            const result = await runFlow<RecommendationInput, RecommendationOutput>('recommendCookie', values);
             setRecommendation(result);
         } catch (e) {
             setError("Maaf, terjadi kesalahan saat membuat rekomendasi. Coba lagi nanti.");
@@ -624,7 +624,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
         setStory(null);
         setStoryError(null);
         try {
-            const result = await generateCookieStory({
+            const result = await runFlow<StoryInput, StoryOutput>('generateCookieStory', {
                 name: recommendation.name,
                 description: recommendedProductFlavor?.description || '',
             });
@@ -793,7 +793,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
 
 const GiftAssistantSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [recommendation, setRecommendation] = useState<{name: string, reason: string} | null>(null);
+    const [recommendation, setRecommendation] = useState<GiftAssistantOutput | null>(null);
     const [error, setError] = useState<string | null>(null);
     const resultRef = useRef<HTMLDivElement>(null);
     
@@ -809,7 +809,7 @@ const GiftAssistantSection: FC<{ onProductSelect: (product: Product) => void }> 
         setRecommendation(null);
         setError(null);
         try {
-            const result = await recommendGift(values);
+            const result = await runFlow<GiftAssistantInput, GiftAssistantOutput>('recommendGift', values);
             setRecommendation(result);
         } catch (e) {
             setError("Maaf, terjadi kesalahan saat mencari kado. Coba lagi nanti.");
@@ -936,18 +936,18 @@ const ProductDetailDialog: FC<{
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0 bg-card">
-        <div className="flex flex-col md:flex-row">
-           <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden">
+        <div className="flex flex-col">
+           <div className="w-full">
              <Image
               src={selectedFlavor.image}
               alt={`${product.name} - ${selectedFlavor.name}`}
               width={800}
               height={600}
               data-ai-hint={selectedFlavor.hint}
-              className="object-cover w-full h-full"
+              className="object-cover w-full h-full aspect-[4/3]"
             />
           </div>
-          <div className="p-6 sm:p-8 flex flex-col md:w-1/2">
+          <div className="p-6 sm:p-8 flex flex-col">
             <DialogHeader className="text-left">
               <DialogTitle className="font-headline text-3xl mb-2 text-accent">{product.name}</DialogTitle>
               <DialogDescription className="text-base">
