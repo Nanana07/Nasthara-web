@@ -462,7 +462,7 @@ const ProductSection: FC<{ onProductSelect: (product: Product) => void }> = ({ o
   return (
     <section id="products" className="py-20 px-4 bg-card/80">
       <div className="container mx-auto">
-        <div className="flex justify-center items-center gap-4 mb-12 text-center">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-12 text-center">
             <h2 className="text-3xl md:text-4xl font-headline font-bold text-accent">Our Delights</h2>
             <div className="flex items-center gap-2 bg-background p-2 rounded-md shadow-sm">
                 <Image src="/halal-mui.png" alt="Logo Halal MUI" width={40} height={40} />
@@ -708,7 +708,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
                                     <FormItem>
                                       <FormLabel className="text-lg font-semibold flex items-center gap-2"><Wheat/> Bahan Spesial</FormLabel>
                                       <FormControl>
-                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
                                           {['Keju', 'Cokelat', 'Kacang', 'Buah'].map(value => (
                                             <FormItem key={value}>
                                                <FormControl>
