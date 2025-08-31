@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart } from 'lucide-react';
+import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart, Heart } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/Logo';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 
 const products: Product[] = [
@@ -185,12 +186,27 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-1 sm:gap-2">
-            <Button variant="ghost" asChild>
-                <Link href="/blog">
-                    <BookHeart className="h-5 w-5 mr-2" />
-                    <span className="hidden sm:inline">Blog</span>
-                </Link>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="group">
+                  <Heart className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link href="/blog">
+                    <BookHeart className="mr-2 h-4 w-4" />
+                    <span>Blog</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer">
+                    <Instagram className="mr-2 h-4 w-4" />
+                    <span>Instagram</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           <Button variant="ghost" size="icon" onClick={onCartClick} className="relative group">
             <ShoppingCart className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
             {cartCount > 0 && (
@@ -200,11 +216,6 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
             )}
             <span className="sr-only">Keranjang Belanja</span>
           </Button>
-          <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <Button variant="ghost" size="icon" className="group">
-              <Instagram className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
-            </Button>
-          </Link>
           <Link href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
             <Button variant="ghost" size="icon" className="group">
               <Image src="/whatsapp.png" alt="WhatsApp Icon" width={24} height={24} className="group-hover:scale-110 transition-transform" />

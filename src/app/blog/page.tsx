@@ -5,9 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Cookie, BookHeart } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { ArrowRight, BookHeart, Heart, Instagram } from 'lucide-react';
 import { Logo } from '@/components/Logo';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const recipes = [
   {
@@ -73,6 +73,27 @@ const Header = () => (
                     Home
                 </Link>
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="group">
+                  <Heart className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link href="/blog">
+                    <BookHeart className="mr-2 h-4 w-4" />
+                    <span>Blog</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer">
+                    <Instagram className="mr-2 h-4 w-4" />
+                    <span>Instagram</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
         </nav>
       </div>
     </header>

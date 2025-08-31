@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Printer, ShoppingCart, ChefHat, CheckCircle2, Home, BookHeart } from 'lucide-react';
+import { Printer, ShoppingCart, ChefHat, CheckCircle2, Home, BookHeart, Heart, Instagram } from 'lucide-react';
 import type { Product } from '@/types/product';
 import { Logo } from '@/components/Logo';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const nastarProduct: Product = {
     name: 'Nastar',
@@ -64,12 +65,27 @@ const Header = () => (
                     <span className="hidden sm:inline">Home</span>
                 </Link>
             </Button>
-            <Button variant="ghost" asChild>
-                <Link href="/blog">
-                    <BookHeart className="h-5 w-5 sm:mr-2" />
-                    <span className="hidden sm:inline">Blog</span>
-                </Link>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="group">
+                  <Heart className="h-6 w-6 text-accent group-hover:scale-110 transition-transform" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link href="/blog">
+                    <BookHeart className="mr-2 h-4 w-4" />
+                    <span>Blog</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer">
+                    <Instagram className="mr-2 h-4 w-4" />
+                    <span>Instagram</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
         </nav>
       </div>
     </header>
