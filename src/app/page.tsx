@@ -22,46 +22,47 @@ import { useToast } from '@/hooks/use-toast';
 const products: Product[] = [
   {
     name: 'Nastar',
-    description: 'Reminds you of: Kumpul keluarga di ruang tamu nenek, aroma manis mentega dan nanas.',
+    description: 'Reminds you of: Kumpul keluarga di ruang tamu nenek, aroma manis mentega dan nanas. (Mulai dari IDR 45K)',
     image: 'https://picsum.photos/600/400',
     hint: 'nastar cookie',
-    price: 100000,
+    price: 65000,
     bestseller: true,
   },
   {
     name: 'Palm Cheese',
-    description: 'Reminds you of: Keju gurih berpadu manisnya gula aren, kelezatan yang tak terduga.',
+    description: 'Reminds you of: Keju gurih berpadu manisnya gula aren, kelezatan yang tak terduga. (Mulai dari IDR 27K)',
     image: 'https://picsum.photos/600/400',
     hint: 'palm cheese cookie',
-    price: 90000,
+    price: 35000,
   },
   {
     name: 'Lidah Kucing',
-    description: 'Reminds you of: Obrolan ringan ditemani secangkir teh hangat, kebahagiaan yang renyah.',
+    description: 'Reminds you of: Obrolan ringan ditemani secangkir teh hangat, kebahagiaan yang renyah. (Mulai dari IDR 37K)',
     image: 'https://picsum.photos/600/400',
     hint: 'cat tongue cookie',
-    price: 85000,
+    price: 37000,
+    bestseller: true,
   },
   {
     name: 'Kastengel Premium',
-    description: 'Reminds you of: Keju melimpah dan renyahnya kebersamaan, tradisi yang selalu dinanti.',
+    description: 'Reminds you of: Keju melimpah dan renyahnya kebersamaan, tradisi yang selalu dinanti. (500ml IDR 70K)',
     image: 'https://picsum.photos/600/400',
     hint: 'kaasstengels cheese',
-    price: 95000,
+    price: 70000,
   },
   {
     name: 'Choco Mede',
-    description: 'Reminds you of: Petualangan rasa baru di setiap gigitan, kejutan di tengah kesederhanaan.',
+    description: 'Reminds you of: Petualangan rasa baru di setiap gigitan, kejutan di tengah kesederhanaan. (Mulai dari IDR 40K)',
     image: 'https://picsum.photos/600/400',
     hint: 'chocolate cashew cookie',
-    price: 95000,
+    price: 55000,
   },
   {
     name: 'Bawang Gunting',
-    description: 'Reminds you of: Camilan renyah di sore hari, teman setia saat santai bersama keluarga.',
+    description: 'Reminds you of: Camilan renyah di sore hari, teman setia saat santai bersama keluarga. (Mulai dari IDR 8K)',
     image: 'https://picsum.photos/600/400',
     hint: 'savory snack',
-    price: 75000,
+    price: 40000,
   },
 ];
 
@@ -97,6 +98,27 @@ const CartDialogFormSchema = z.object({
 
 type CartDialogFormValues = z.infer<typeof CartDialogFormSchema>;
 
+const HalalLogo: FC<{ className?: string }> = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-label="Logo Halal MUI"
+    role="img"
+  >
+    <path
+      d="M19.78 6.22C19.43 5.87 19.01 5.58 18.56 5.36C17.65 4.92 16.62 4.96 15.68 5.4L15.37 5.56L15.11 5.7L14.77 5.91L14.47 6.13L14.24 6.3L14.08 6.44L12.01 7.9L9.93 6.44L9.77 6.3L9.54 6.13L9.25 5.91L8.9 5.7L8.64 5.56L8.33 5.4C7.39 4.96 6.36 4.92 5.45 5.36C5.01 5.58 4.58 5.87 4.23 6.22C3.88 6.57 3.59 6.99 3.37 7.44C2.93 8.35 2.97 9.38 3.41 10.32L3.57 10.63L3.72 10.89L3.92 11.23L4.14 11.53L4.31 11.76L4.45 11.92L6.11 13.58L6.44 14.54L6.68 15.86L6.82 17.55C6.88 18.3 7.5 18.92 8.25 18.98C8.3 18.99 8.35 18.99 8.4 18.99C9.11 18.99 9.69 18.47 9.74 17.77L9.58 15.93L9.44 14.65L9.26 13.91L8.79 12.56L7.91 10.82L9.08 9.92L9.7 12.1L10.02 13.08L10.35 14.07L10.61 14.82L10.74 15.21L11.13 16.35C11.17 16.45 11.23 16.55 11.3 16.64C11.66 17.22 12.36 17.49 13.04 17.29C13.73 17.09 14.15 16.4 13.95 15.71L13.11 13.02L12.87 12.2L12.29 10.22L12.01 9.37L12.29 9.19L14.14 10.4L15.22 12.55L14.68 13.91L14.5 14.65L14.36 15.93L14.2 17.77C14.15 18.47 14.73 18.99 15.44 18.99C15.49 18.99 15.54 18.99 15.59 18.98C16.34 18.92 16.96 18.3 17.02 17.55L17.16 15.86L17.4 14.54L17.73 13.58L19.39 11.92L19.53 11.76L19.7 11.53L19.92 11.23L20.12 10.89L20.27 10.63L20.43 10.32C20.87 9.38 20.91 8.35 20.47 7.44C20.25 6.99 19.96 6.57 19.61 6.22H19.78Z"
+      fill="#009A44"
+    />
+    <path
+      d="M12.01 12.16C12.51 12.16 12.91 11.76 12.91 11.26C12.91 10.76 12.51 10.36 12.01 10.36C11.51 10.36 11.11 10.76 11.11 11.26C11.11 11.76 11.51 12.16 12.01 12.16Z"
+      fill="#009A44"
+    />
+  </svg>
+);
+
+
 const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
   const { cartCount } = useCart();
   return (
@@ -116,11 +138,6 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
             )}
             <span className="sr-only">Keranjang Belanja</span>
           </Button>
-          <Link href="https://shopee.co.id/nasthar_a" target="_blank" rel="noopener noreferrer" aria-label="Shopee">
-            <Button variant="ghost" size="icon">
-              <ShopeeIcon className="h-6 w-6 text-accent" />
-            </Button>
-          </Link>
           <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <Button variant="ghost" size="icon">
               <Instagram className="h-6 w-6 text-accent" />
@@ -149,8 +166,8 @@ const HeroSection: FC = () => (
           <a href="#products">Order Now</a>
         </Button>
         <Button asChild size="lg" variant="outline">
-          <a href="https://shopee.co.id/nasthar_a" target="_blank" rel="noopener noreferrer">
-            <ShopeeIcon className="mr-2 h-5 w-5" /> Order via Shopee
+          <a href="https://wa.me/6282233676703" target="_blank" rel="noopener noreferrer">
+            <MessageCircle className="mr-2 h-5 w-5" /> Hubungi Kami
           </a>
         </Button>
       </div>
@@ -216,7 +233,7 @@ const CartDialog: FC<{ isOpen: boolean; onOpenChange: (open: boolean) => void; }
     cartItems.forEach(item => {
       message += `- ${item.name} (${item.quantity} toples) - ${formatPrice(item.price * item.quantity)}\n`;
     });
-    message += `\n*Total Harga:* ${formatPrice(totalPrice)}\n\nTerima kasih!`;
+    message += `\n*Total Harga:* ${formatPrice(totalPrice)}\n\n(Mohon infokan jika ada pilihan ukuran lain yang tersedia untuk produk di atas)\n\nTerima kasih!`;
     
     const whatsappUrl = `https://wa.me/6282233676703?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -302,7 +319,13 @@ const ProductSection: FC = () => {
   return (
     <section id="products" className="py-20 px-4 bg-card">
       <div className="container mx-auto">
-        <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">Our Delights</h2>
+        <div className="flex justify-center items-center gap-4 mb-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Delights</h2>
+            <div className="flex items-center gap-2 bg-white p-2 rounded-md shadow-sm">
+                <HalalLogo className="h-10 w-10" />
+                 <p className="text-xs text-green-700 font-semibold leading-tight">TERSERTIFIKASI<br/>HALAL<br/>INDONESIA</p>
+            </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => (
                 <ProductCard key={index} product={product} />
