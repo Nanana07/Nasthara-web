@@ -16,7 +16,6 @@ import { generateCookieStory } from '@/ai/flows/story-generator-flow';
 import { recommendGift } from '@/ai/flows/gift-assistant-flow';
 import { GiftAssistantInputSchema, type GiftAssistantInput } from '@/ai/flows/gift-assistant-types';
 
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -29,6 +28,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from '@/components/ui/label';
+import { Logo } from '@/components/Logo';
 
 
 const products: Product[] = [
@@ -201,7 +201,7 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
     <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <Image src="/nasthara.png" alt="Nasthara Logo" width={32} height={32} className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
+          <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
           <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center gap-1 sm:gap-2">
@@ -1053,7 +1053,7 @@ const Footer: FC = () => (
   <footer className="bg-card/80 py-12 px-4 mt-20">
     <div className="container mx-auto text-center text-muted-foreground">
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Image src="/nasthara.png" alt="Nasthara Logo" width={32} height={32} />
+        <Logo />
         <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
       </div>
       <p className="text-lg italic mb-6">“Because every home has a taste. And that taste is Nasthara.”</p>
