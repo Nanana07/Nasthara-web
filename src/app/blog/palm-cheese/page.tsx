@@ -36,21 +36,21 @@ const formatPrice = (price: number) => {
 
 const Header = () => (
   <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
-      <div className="container mx-auto flex items-center justify-between">
+      <div className="container mx-auto flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 group">
           <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
-          <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
+          <span className="text-xl sm:text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
-        <nav className="flex items-center gap-2 sm:gap-4">
+        <nav className="flex items-center shrink-0">
             <Button variant="ghost" asChild>
                 <Link href="/">
-                    <Home className="h-5 w-5 mr-2" />
+                    <Home className="h-5 w-5 sm:mr-2" />
                     <span className="hidden sm:inline">Home</span>
                 </Link>
             </Button>
             <Button variant="ghost" asChild>
                 <Link href="/blog">
-                     <BookHeart className="h-5 w-5 mr-2" />
+                     <BookHeart className="h-5 w-5 sm:mr-2" />
                     <span className="hidden sm:inline">Blog</span>
                 </Link>
             </Button>
