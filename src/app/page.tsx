@@ -6,11 +6,13 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat } from 'lucide-react';
+import { Instagram, MessageCircle, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
 import { RecommendationInputSchema, type RecommendationInput } from '@/ai/flows/recommend-cookie-types';
+import { generateCookieStory } from '@/ai/flows/story-generator-flow';
+
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -572,6 +574,10 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
     const [error, setError] = useState<string | null>(null);
     const resultRef = useRef<HTMLDivElement>(null);
     
+    const [isStoryLoading, setIsStoryLoading] = useState(false);
+    const [story, setStory] = useState<string | null>(null);
+    const [storyError, setStoryError] = useState<string | null>(null);
+
     const form = useForm<RecommendationInput>({
         resolver: zodResolver(RecommendationInputSchema),
         defaultValues: {
@@ -585,6 +591,8 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
         setIsLoading(true);
         setRecommendation(null);
         setError(null);
+        setStory(null);
+        setStoryError(null);
         try {
             const result = await recommendCookie(values);
             setRecommendation(result);
@@ -593,6 +601,26 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
             console.error(e);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleGenerateStory = async () => {
+        if (!recommendation) return;
+        
+        setIsStoryLoading(true);
+        setStory(null);
+        setStoryError(null);
+        try {
+            const result = await generateCookieStory({
+                name: recommendation.name,
+                description: recommendedProductFlavor?.description || '',
+            });
+            setStory(result.story);
+        } catch (e) {
+            setStoryError("Maaf, terjadi kesalahan saat membuat dongeng. Coba lagi nanti.");
+            console.error(e);
+        } finally {
+            setIsStoryLoading(false);
         }
     };
     
@@ -722,11 +750,25 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
                                     </CardHeader>
                                     <CardContent>
                                         <p className="text-muted-foreground italic mb-4">"{recommendation.reason}"</p>
-                                        <Button onClick={() => onProductSelect(recommendedProduct)} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                                          Lihat Produk
-                                        </Button>
+                                        <div className="flex flex-col gap-2">
+                                            <Button onClick={() => onProductSelect(recommendedProduct)} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                                              Lihat Produk
+                                            </Button>
+                                            <Button onClick={handleGenerateStory} disabled={isStoryLoading} variant="outline" className="w-full">
+                                                {isStoryLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Membuka buku dongeng...</> : <><BookOpen className="mr-2 h-4 w-4" /> Bacakan Dongeng Kue Ini</>}
+                                            </Button>
+                                        </div>
                                     </CardContent>
                                 </Card>
+
+                                {storyError && <p className="text-destructive mt-4">{storyError}</p>}
+                                
+                                {story && (
+                                    <div className="mt-6 text-left p-6 bg-background rounded-lg border animate-in fade-in-up">
+                                        <h4 className="font-headline text-xl text-accent mb-3">Dongeng untukmu...</h4>
+                                        <p className="text-muted-foreground whitespace-pre-wrap">{story}</p>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </CardContent>
