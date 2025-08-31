@@ -180,12 +180,12 @@ const Header: FC<{ onCartClick: () => void }> = ({ onCartClick }) => {
   const { cartCount } = useCart();
   return (
     <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
-      <div className="container mx-auto flex items-center justify-between">
+      <div className="container mx-auto flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 group">
           <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
-          <span className="text-2xl font-bold font-headline text-foreground">Nasthara</span>
+          <span className="text-xl sm:text-2xl font-bold font-headline text-foreground hidden sm:inline">Nasthara</span>
         </Link>
-        <nav className="flex items-center gap-1 sm:gap-2">
+        <nav className="flex items-center shrink-0">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="group">
@@ -658,7 +658,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
                                     <FormItem>
                                       <FormLabel className="text-lg font-semibold flex items-center gap-2"><CakeSlice/> Dasar Rasa</FormLabel>
                                       <FormControl>
-                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-3 gap-4 pt-2">
+                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
                                           {['Manis', 'Gurih', 'Kombinasi'].map(value => (
                                             <FormItem key={value}>
                                               <FormControl>
@@ -683,7 +683,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
                                     <FormItem>
                                       <FormLabel className="text-lg font-semibold flex items-center gap-2"><ChefHat/> Tekstur</FormLabel>
                                       <FormControl>
-                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-3 gap-4 pt-2">
+                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
                                           {['Renyah', 'Lembut', 'Lumer'].map(value => (
                                             <FormItem key={value}>
                                                <FormControl>

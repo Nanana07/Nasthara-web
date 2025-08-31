@@ -36,7 +36,7 @@ const Header = () => (
       <div className="container mx-auto flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 group">
           <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
-          <span className="text-xl sm:text-2xl font-bold font-headline text-foreground">Nasthara</span>
+          <span className="text-xl sm:text-2xl font-bold font-headline text-foreground hidden sm:inline">Nasthara</span>
         </Link>
         <nav className="flex items-center shrink-0">
             <Button variant="ghost" asChild>

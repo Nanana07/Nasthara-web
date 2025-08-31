@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, BookHeart, Heart, Instagram } from 'lucide-react';
+import { ArrowRight, BookHeart, Heart, Instagram, Home } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
@@ -65,12 +65,13 @@ const Header = () => (
       <div className="container mx-auto flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 group">
           <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
-          <span className="text-xl sm:text-2xl font-bold font-headline text-foreground">Nasthara</span>
+          <span className="text-xl sm:text-2xl font-bold font-headline text-foreground hidden sm:inline">Nasthara</span>
         </Link>
         <nav className="flex items-center shrink-0">
             <Button variant="ghost" asChild>
                 <Link href="/">
-                    Home
+                    <Home className="h-5 w-5 sm:mr-2" />
+                    <span className="hidden sm:inline">Home</span>
                 </Link>
             </Button>
             <DropdownMenu>
