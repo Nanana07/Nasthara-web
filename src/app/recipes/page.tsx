@@ -1,10 +1,11 @@
+
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Cookie, BookHeart } from 'lucide-react';
+import { ArrowRight, Cookie, BookHeart, ExternalLink } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 const recipes = [
@@ -14,9 +15,32 @@ const recipes = [
     description: 'Resep klasik yang tak lekang oleh waktu, menghadirkan kelembutan dan rasa nanas yang sempurna di setiap gigitan.',
     image: 'https://picsum.photos/600/400',
     hint: 'nastar cookie',
-    tags: ['Klasik', 'Lebaran', 'Manis'],
+    tags: ['Internal', 'Lebaran', 'Manis'],
   },
-  // Tambahkan resep lain di sini
+  {
+    title: 'Kue Semprit Keju',
+    url: 'https://cookpad.com/id/resep/16997420-kue-semprit-keju',
+    description: 'Resep kue semprit keju yang renyah dan gurih, cocok untuk camilan atau suguhan di hari raya.',
+    image: 'https://picsum.photos/600/400',
+    hint: 'cheese spritz cookie',
+    tags: ['Eksternal', 'Gurih', 'Keju'],
+  },
+  {
+    title: 'Putri Salju Lumer',
+    url: 'https://www.masakapahariini.com/resep/resep-putri-salju-spesial-untuk-lebaran/',
+    description: 'Kue putri salju lembut yang lumer di mulut, dengan taburan gula halus yang manis dan dingin.',
+    image: 'https://picsum.photos/600/400',
+    hint: 'snow white cookie',
+    tags: ['Eksternal', 'Manis', 'Klasik'],
+  },
+    {
+    title: 'Kastengel Keju Premium',
+    url: 'https://www.fimela.com/food/read/4953931/resep-kastengel-keju-premium-yang-renyah-dan-tidak-mudah-hancur',
+    description: 'Resep Kastengel premium dengan cita rasa keju yang kuat dan tekstur renyah yang bikin nagih.',
+    image: 'https://picsum.photos/600/400',
+    hint: 'premium kaastengels',
+    tags: ['Eksternal', 'Gurih', 'Premium'],
+  },
 ];
 
 const Header = () => (
@@ -60,7 +84,7 @@ export default function RecipesPage() {
             <BookHeart className="mx-auto h-12 w-12 text-primary mb-4" />
             <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Buku Resep Nasthara</h1>
             <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground">
-              Kumpulan resep rahasia dari dapur kami, kini untuk Anda coba di rumah. Selamat berkreasi!
+              Kumpulan resep rahasia dari dapur kami dan inspirasi dari para chef, kini untuk Anda coba di rumah. Selamat berkreasi!
             </p>
           </div>
         </section>
@@ -68,36 +92,41 @@ export default function RecipesPage() {
         <section className="pb-20 px-4">
           <div className="container mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {recipes.map((recipe, index) => (
-                <Card key={index} className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg hover:shadow-primary/20 bg-card">
-                  <CardHeader className="p-0 relative">
-                    <Link href={`/recipes/${recipe.slug}`} className="aspect-video overflow-hidden w-full cursor-pointer block">
-                      <Image
-                        src={recipe.image}
-                        alt={recipe.title}
-                        width={600}
-                        height={400}
-                        data-ai-hint={recipe.hint}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out"
-                      />
-                    </Link>
-                  </CardHeader>
-                  <CardContent className="p-6 flex-grow flex flex-col">
-                    <CardTitle className="font-headline text-2xl mb-2">{recipe.title}</CardTitle>
-                    <CardDescription className="text-base text-muted-foreground flex-grow mb-4">{recipe.description}</CardDescription>
-                     <div className="flex gap-2 mb-4">
-                      {recipe.tags.map(tag => (
-                        <span key={tag} className="text-xs bg-primary/20 text-primary-foreground py-1 px-3 rounded-full">{tag}</span>
-                      ))}
-                    </div>
-                    <Button asChild className="w-full mt-auto bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 transform group-hover:-translate-y-1">
-                      <Link href={`/recipes/${recipe.slug}`}>
-                        Lihat Resep <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
+              {recipes.map((recipe, index) => {
+                const isExternal = !!recipe.url;
+                const href = isExternal ? recipe.url : `/recipes/${recipe.slug}`;
+                
+                return (
+                    <Card key={index} className="overflow-hidden h-full flex flex-col group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg hover:shadow-primary/20 bg-card">
+                    <CardHeader className="p-0 relative">
+                        <Link href={href!} target={isExternal ? '_blank' : '_self'} rel={isExternal ? 'noopener noreferrer' : ''} className="aspect-video overflow-hidden w-full cursor-pointer block">
+                        <Image
+                            src={recipe.image}
+                            alt={recipe.title}
+                            width={600}
+                            height={400}
+                            data-ai-hint={recipe.hint}
+                            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out"
+                        />
+                        </Link>
+                    </CardHeader>
+                    <CardContent className="p-6 flex-grow flex flex-col">
+                        <CardTitle className="font-headline text-2xl mb-2">{recipe.title}</CardTitle>
+                        <CardDescription className="text-base text-muted-foreground flex-grow mb-4">{recipe.description}</CardDescription>
+                        <div className="flex gap-2 mb-4">
+                        {recipe.tags.map(tag => (
+                            <span key={tag} className="text-xs bg-primary/20 text-primary-foreground py-1 px-3 rounded-full font-semibold">{tag}</span>
+                        ))}
+                        </div>
+                        <Button asChild className="w-full mt-auto bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 transform group-hover:-translate-y-1">
+                        <Link href={href!} target={isExternal ? '_blank' : '_self'} rel={isExternal ? 'noopener noreferrer' : ''}>
+                            Lihat Resep {isExternal ? <ExternalLink className="ml-2 h-4 w-4" /> : <ArrowRight className="ml-2 h-4 w-4" />}
+                        </Link>
+                        </Button>
+                    </CardContent>
+                    </Card>
+                );
+            })}
             </div>
           </div>
         </section>
@@ -106,3 +135,4 @@ export default function RecipesPage() {
     </div>
   );
 }
+
