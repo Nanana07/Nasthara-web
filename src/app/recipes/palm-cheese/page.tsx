@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Printer, ShoppingCart, CheckCircle2, Home as HomeIcon, BookHeart, Heart, Instagram } from 'lucide-react';
+import { Printer, ShoppingCart, CheckCircle2, Home, BookHeart, Heart, Instagram } from 'lucide-react';
 import type { Product } from '@/types/product';
 import { Logo } from '@/components/Logo';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -39,13 +39,13 @@ const Header = () => (
   <header className="py-4 px-4 sm:px-6 lg:px-8 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 group">
-          <Logo />
+          <Logo className="group-hover:animate-spin" style={{ animationDuration: '2s' }} />
           <span className="text-xl sm:text-2xl font-bold font-headline text-foreground">Nasthara</span>
         </Link>
         <nav className="flex items-center shrink-0">
             <Button variant="ghost" asChild>
                 <Link href="/">
-                    <HomeIcon className="h-5 w-5 sm:mr-2" />
+                    <Home className="h-5 w-5 sm:mr-2" />
                     <span className="hidden sm:inline">Home</span>
                 </Link>
             </Button>
@@ -57,9 +57,9 @@ const Header = () => (
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem asChild>
-                  <Link href="/recipes">
+                  <Link href="/blog">
                     <BookHeart className="mr-2 h-4 w-4" />
-                    <span>Resep</span>
+                    <span>Blog</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
@@ -100,7 +100,7 @@ export default function PalmCheeseRecipePage() {
         <div className="max-w-4xl mx-auto">
           <article>
             <header className="mb-8 text-center">
-              <p className="text-primary font-semibold mb-2">Buku Resep Nasthara</p>
+              <p className="text-primary font-semibold mb-2">Blog Internal Dapur Nasthara</p>
               <h1 className="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">Palm Cheese Cookies</h1>
               <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
                 Kue kering dengan perpaduan rasa manis gula palem dan gurihnya keju yang unik, menciptakan sensasi rasa yang tak terlupakan.

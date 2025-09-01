@@ -192,9 +192,9 @@ const Header: FC<{ onCartClick: () => void; showHomeButton?: boolean }> = ({ onC
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem asChild>
-                  <Link href="/recipes">
+                  <Link href="/blog">
                     <BookHeart className="mr-2 h-4 w-4" />
-                    <span>Resep</span>
+                    <span>Blog</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
@@ -708,7 +708,7 @@ const Footer: FC = () => (
         <p className="font-semibold text-foreground mb-2">Connect With Us</p>
         <div className="flex justify-center gap-2">
            <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
-            <Link href="/recipes">Resep</Link>
+            <Link href="/blog">Blog</Link>
           </Button>
           <Separator orientation="vertical" className="h-6" />
            <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
