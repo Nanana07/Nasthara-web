@@ -81,12 +81,6 @@ const Header = () => (
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem asChild>
-                  <Link href="/blog">
-                    <BookHeart className="mr-2 h-4 w-4" />
-                    <span>Blog</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
                   <Link href="https://instagram.com/NASTHAR_A" target="_blank" rel="noopener noreferrer">
                     <Instagram className="mr-2 h-4 w-4" />
                     <span>Instagram</span>
