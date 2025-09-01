@@ -7,21 +7,14 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart, Heart, HomeIcon } from 'lucide-react';
-import { useCart, type CartItem } from '@/contexts/CartContext';
+import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, BookHeart, Heart, HomeIcon, History } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
-import { type RecommendationInput, RecommendationInputSchema, type RecommendationOutput } from '@/ai/flows/recommend-cookie-types';
-import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
-import { type StoryInput, type StoryOutput } from '@/ai/flows/story-generator-types';
-import { generateCookieStory } from '@/ai/flows/story-generator-flow';
-import { type GiftAssistantInput, GiftAssistantInputSchema, type GiftAssistantOutput } from '@/ai/flows/gift-assistant-types';
-import { recommendGift } from '@/ai/flows/gift-assistant-flow';
-
+import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -142,11 +135,6 @@ const products: Product[] = [
     },
 ];
 
-const allProductFlavors: (ProductFlavorVariant & { productName: string, bestseller: boolean | undefined })[] = products.flatMap(p => 
-    p.flavors.map(f => ({ ...f, productName: p.name, bestseller: p.bestseller }))
-);
-
-
 const testimonials = [
   {
     name: 'Nana',
@@ -262,7 +250,7 @@ const HeroSection: FC = () => (
   </section>
 );
 
-const ProductCard: FC<{ product: Product, onSelect: () => void }> = ({ product, onSelect }) => {
+const ProductCard: FC<{ product: Product, onSelect: (product: Product) => void }> = ({ product, onSelect }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   
@@ -293,7 +281,7 @@ const ProductCard: FC<{ product: Product, onSelect: () => void }> = ({ product, 
             Bestseller 💛
           </div>
         )}
-        <button onClick={onSelect} className="aspect-video overflow-hidden w-full cursor-pointer">
+        <button onClick={() => onSelect(product)} className="aspect-video overflow-hidden w-full cursor-pointer">
           <Image
             src={selectedFlavor.image}
             alt={`${product.name} - ${selectedFlavor.name}`}
@@ -483,7 +471,7 @@ const ProductSection: FC<{ onProductSelect: (product: Product) => void }> = ({ o
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => (
                 <div key={product.name} className="animate-fade-in-up" style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'both' }}>
-                  <ProductCard product={product} onSelect={() => onProductSelect(product)} />
+                  <ProductCard product={product} onSelect={onProductSelect} />
                 </div>
             ))}
         </div>
@@ -583,319 +571,50 @@ const MidCtaSection: FC = () => (
   </section>
 );
 
-const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [recommendation, setRecommendation] = useState<RecommendationOutput | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const resultRef = useRef<HTMLDivElement>(null);
-    
-    const [isStoryLoading, setIsStoryLoading] = useState(false);
-    const [story, setStory] = useState<string | null>(null);
-    const [storyError, setStoryError] = useState<string | null>(null);
+const RecentlyViewedSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
+    const { viewedProducts, clearViewedProducts } = useRecentlyViewed();
 
-    const form = useForm<RecommendationInput>({
-        resolver: zodResolver(RecommendationInputSchema),
-        defaultValues: {
-            baseFlavor: 'Manis',
-            texture: 'Renyah',
-            specialIngredient: 'Keju',
-        },
-    });
+    if (!viewedProducts.length) {
+        return null;
+    }
 
-    const onSubmit = async (values: RecommendationInput) => {
-        setIsLoading(true);
-        setRecommendation(null);
-        setError(null);
-        setStory(null);
-        setStoryError(null);
-        try {
-            const result = await recommendCookie(values);
-            setRecommendation(result);
-        } catch (e) {
-            setError("Maaf, terjadi kesalahan saat membuat rekomendasi. Coba lagi nanti.");
-            console.error(e);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleGenerateStory = async () => {
-        if (!recommendation) return;
-        
-        setIsStoryLoading(true);
-        setStory(null);
-        setStoryError(null);
-        try {
-            const result = await generateCookieStory({
-                name: recommendation.name,
-                description: recommendedProductFlavor?.description || '',
-            });
-            setStory(result.story);
-        } catch (e) {
-            setStoryError("Maaf, terjadi kesalahan saat membuat dongeng. Coba lagi nanti.");
-            console.error(e);
-        } finally {
-            setIsStoryLoading(false);
-        }
-    };
-    
-    useEffect(() => {
-        if (recommendation && resultRef.current) {
-            resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }, [recommendation]);
-    
-    const recommendedProductFlavor = allProductFlavors.find(p => `${p.productName} ${p.name}`.toLowerCase().includes(recommendation?.name.toLowerCase() || ''));
-    const recommendedProduct = products.find(p => p.name === recommendedProductFlavor?.productName);
-
-
-    return (
-        <section className="py-20 px-4 bg-baking-pattern">
-            <div className="container mx-auto max-w-2xl">
-                <Card className="p-8 shadow-2xl bg-card/95 backdrop-blur-sm">
-                    <CardHeader className="text-center p-0 mb-6">
-                        <Wand2 className="mx-auto h-10 w-10 text-primary mb-4" />
-                        <CardTitle className="text-3xl font-headline text-accent">Dapur Ajaib Nasthara</CardTitle>
-                        <CardDescription className="text-lg">Sulap kombinasi favoritmu menjadi kue!</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                                
-                                <FormField
-                                  control={form.control}
-                                  name="baseFlavor"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-lg font-semibold flex items-center gap-2"><CakeSlice/> Dasar Rasa</FormLabel>
-                                      <FormControl>
-                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
-                                          {['Manis', 'Gurih', 'Kombinasi'].map(value => (
-                                            <FormItem key={value}>
-                                              <FormControl>
-                                                <RadioGroupItem value={value} id={`flavor-${value}`} className="sr-only"/>
-                                              </FormControl>
-                                              <Label htmlFor={`flavor-${value}`} className={cn("block w-full text-center p-4 border rounded-lg cursor-pointer", field.value === value && "bg-primary text-primary-foreground border-primary")}>
-                                                {value}
-                                              </Label>
-                                            </FormItem>
-                                          ))}
-                                        </RadioGroup>
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-
-                                <FormField
-                                  control={form.control}
-                                  name="texture"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-lg font-semibold flex items-center gap-2"><ChefHat/> Tekstur</FormLabel>
-                                      <FormControl>
-                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
-                                          {['Renyah', 'Lembut', 'Lumer'].map(value => (
-                                            <FormItem key={value}>
-                                               <FormControl>
-                                                <RadioGroupItem value={value} id={`texture-${value}`} className="sr-only"/>
-                                               </FormControl>
-                                               <Label htmlFor={`texture-${value}`} className={cn("block w-full text-center p-4 border rounded-lg cursor-pointer", field.value === value && "bg-primary text-primary-foreground border-primary")}>
-                                                {value}
-                                              </Label>
-                                            </FormItem>
-                                          ))}
-                                        </RadioGroup>
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-
-                                <FormField
-                                  control={form.control}
-                                  name="specialIngredient"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-lg font-semibold flex items-center gap-2"><Wheat/> Bahan Spesial</FormLabel>
-                                      <FormControl>
-                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
-                                          {['Keju', 'Cokelat', 'Kacang', 'Buah'].map(value => (
-                                            <FormItem key={value}>
-                                               <FormControl>
-                                                <RadioGroupItem value={value} id={`ingredient-${value}`} className="sr-only"/>
-                                               </FormControl>
-                                               <Label htmlFor={`ingredient-${value}`} className={cn("block w-full text-center p-4 border rounded-lg cursor-pointer", field.value === value && "bg-primary text-primary-foreground border-primary")}>
-                                                {value}
-                                              </Label>
-                                            </FormItem>
-                                          ))}
-                                        </RadioGroup>
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                
-                                <Button type="submit" disabled={isLoading} size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground !mt-8 text-base">
-                                    {isLoading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Meracik adonan ajaib...</> : <><Wand2 className="mr-2 h-5 w-5" /> Aduk Adonan!</>}
-                                 </Button>
-                            </form>
-                        </Form>
-
-                        {error && <p className="text-destructive mt-4 text-center">{error}</p>}
-
-                        {recommendation && recommendedProductFlavor && recommendedProduct && (
-                            <div ref={resultRef} className="mt-8 text-center animate-in fade-in-up">
-                                <Separator className="my-6"/>
-                                <h3 className="text-2xl font-headline font-bold text-accent mb-4">Resep Ajaib-mu Sudah Jadi!</h3>
-                                <Card className="overflow-hidden">
-                                     <Image
-                                        src={recommendedProductFlavor.image}
-                                        alt={recommendedProductFlavor.name}
-                                        width={600}
-                                        height={300}
-                                        data-ai-hint={recommendedProductFlavor.hint}
-                                        className="object-cover w-full h-48"
-                                    />
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center justify-center gap-2 text-2xl font-headline">
-                                            <Sparkles className="h-6 w-6 text-primary"/> {recommendedProduct.name} {recommendedProductFlavor.name !== 'Original' ? `(${recommendedProductFlavor.name})` : ''}
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-muted-foreground italic mb-4">"{recommendation.reason}"</p>
-                                        <div className="flex flex-col gap-2">
-                                            <Button onClick={() => onProductSelect(recommendedProduct)} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                                              Lihat Produk
-                                            </Button>
-                                            <Button onClick={handleGenerateStory} disabled={isStoryLoading} variant="outline" className="w-full">
-                                                {isStoryLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Membuka buku dongeng...</> : <><BookOpen className="mr-2 h-4 w-4" /> Bacakan Dongeng Kue Ini</>}
-                                            </Button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-
-                                {storyError && <p className="text-destructive mt-4">{storyError}</p>}
-                                
-                                {story && (
-                                    <div className="mt-6 text-left p-6 bg-background rounded-lg border animate-in fade-in-up">
-                                        <h4 className="font-headline text-xl text-accent mb-3">Dongeng untukmu...</h4>
-                                        <p className="text-muted-foreground whitespace-pre-wrap">{story}</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
-            </div>
-        </section>
-    );
-};
-
-const GiftAssistantSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [recommendation, setRecommendation] = useState<GiftAssistantOutput | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const resultRef = useRef<HTMLDivElement>(null);
-    
-    const form = useForm<GiftAssistantInput>({
-        resolver: zodResolver(GiftAssistantInputSchema),
-        defaultValues: {
-            description: '',
-        },
-    });
-
-    const onSubmit = async (values: GiftAssistantInput) => {
-        setIsLoading(true);
-        setRecommendation(null);
-        setError(null);
-        try {
-            const result = await recommendGift(values);
-            setRecommendation(result);
-        } catch (e) {
-            setError("Maaf, terjadi kesalahan saat mencari kado. Coba lagi nanti.");
-            console.error(e);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    
-    useEffect(() => {
-        if (recommendation && resultRef.current) {
-            resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }, [recommendation]);
-    
-    const recommendedProductFlavor = allProductFlavors.find(p => `${p.productName}`.toLowerCase().includes(recommendation?.name.toLowerCase() || ''));
-    const recommendedProduct = products.find(p => p.name === recommendedProductFlavor?.productName);
+    const recentlyViewedProducts = viewedProducts.map(viewed => products.find(p => p.name === viewed.name)).filter(Boolean) as Product[];
 
     return (
         <section className="py-20 px-4">
-            <div className="container mx-auto max-w-2xl">
-                <Card className="p-8 shadow-2xl bg-card/95 backdrop-blur-sm">
-                    <CardHeader className="text-center p-0 mb-6">
-                        <Gift className="mx-auto h-10 w-10 text-primary mb-4" />
-                        <CardTitle className="text-3xl font-headline text-accent">Asisten Kado Nasthara</CardTitle>
-                        <CardDescription className="text-lg">Bingung pilih kado? Biarkan kami bantu!</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                                <FormField
-                                  control={form.control}
-                                  name="description"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-lg font-semibold">Ceritakan sedikit tentang kado yang Anda cari</FormLabel>
-                                       <FormControl>
-                                        <Textarea
-                                          placeholder="Contoh: 'Untuk ulang tahun sahabat yang suka banget keju' atau 'Camilan buat nonton bareng teman-teman, yang gurih dan seru'"
-                                          className="resize-none"
-                                          {...field}
-                                        />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <Button type="submit" disabled={isLoading} size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground !mt-8 text-base">
-                                    {isLoading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Mencari kado terbaik...</> : <><Sparkles className="mr-2 h-5 w-5" /> Cari Kado!</>}
-                                 </Button>
-                            </form>
-                        </Form>
-
-                        {error && <p className="text-destructive mt-4 text-center">{error}</p>}
-
-                        {recommendation && recommendedProductFlavor && recommendedProduct && (
-                            <div ref={resultRef} className="mt-8 text-center animate-in fade-in-up">
-                                <Separator className="my-6"/>
-                                <h3 className="text-2xl font-headline font-bold text-accent mb-4">Kami Punya Ide Kado Sempurna!</h3>
-                                <Card className="overflow-hidden">
-                                     <Image
-                                        src={recommendedProductFlavor.image}
-                                        alt={recommendedProduct.name}
-                                        width={600}
+            <div className="container mx-auto">
+                <div className="flex justify-between items-center mb-8">
+                    <h2 className="text-3xl md:text-4xl font-headline font-bold text-accent flex items-center gap-3">
+                        <History /> Baru Dilihat
+                    </h2>
+                    <Button variant="ghost" onClick={clearViewedProducts} className="text-muted-foreground hover:text-destructive">
+                        Bersihkan
+                    </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {recentlyViewedProducts.map((product) => (
+                        <Card key={product.name} className="overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg hover:shadow-primary/20 bg-card">
+                             <button onClick={() => onProductSelect(product)} className="w-full text-left">
+                                <CardHeader className="p-0 relative">
+                                    <div className="aspect-video overflow-hidden w-full">
+                                      <Image
+                                        src={product.flavors[0].image}
+                                        alt={product.name}
+                                        width={400}
                                         height={300}
-                                        data-ai-hint={recommendedProductFlavor.hint}
-                                        className="object-cover w-full h-48"
-                                    />
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center justify-center gap-2 text-2xl font-headline">
-                                            <Gift className="h-6 w-6 text-primary"/> {recommendedProduct.name}
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-muted-foreground italic mb-4">"{recommendation.reason}"</p>
-                                        <Button onClick={() => onProductSelect(recommendedProduct)} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                                          Bungkus Kado Ini!
-                                        </Button>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                                        data-ai-hint={product.flavors[0].hint}
+                                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out"
+                                      />
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="p-4">
+                                    <CardTitle className="font-headline text-xl mb-1">{product.name}</CardTitle>
+                                    <p className="font-semibold text-md text-accent">{formatPrice(product.flavors[0].sizes[0].price)}</p>
+                                </CardContent>
+                             </button>
+                        </Card>
+                    ))}
+                </div>
             </div>
         </section>
     );
@@ -908,6 +627,7 @@ const ProductDetailDialog: FC<{
 }> = ({ product, isOpen, onOpenChange }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const { addViewedProduct } = useRecentlyViewed();
   
   const [selectedFlavor, setSelectedFlavor] = useState<ProductFlavorVariant | null>(null);
   const [selectedSize, setSelectedSize] = useState<ProductSizeVariant | null>(null);
@@ -915,8 +635,9 @@ const ProductDetailDialog: FC<{
   useEffect(() => {
     if (product) {
       setSelectedFlavor(product.flavors[0]);
+      addViewedProduct(product.name);
     }
-  }, [product]);
+  }, [product, addViewedProduct]);
 
   useEffect(() => {
     if (selectedFlavor) {
@@ -1073,14 +794,6 @@ export default function Home() {
     setProductDetailOpen(true);
   }
 
-  const handleRecommendationSelect = (productName: string) => {
-    const product = products.find(p => p.name === productName);
-    if (product) {
-      handleProductSelect(product);
-    }
-  }
-
-
   return (
     <div className="bg-background font-body text-foreground">
       <Header onCartClick={() => setCartOpen(true)} showHomeButton={false} />
@@ -1089,10 +802,9 @@ export default function Home() {
         <AboutSection />
         <ProductSection onProductSelect={handleProductSelect} />
         <MidCtaSection />
-        <AIRecommenderSection onProductSelect={handleProductSelect} />
-        <GiftAssistantSection onProductSelect={handleProductSelect} />
         <TestimonialSection />
         <SeasonalSection/>
+        <RecentlyViewedSection onProductSelect={handleProductSelect}/>
       </main>
       <Footer />
       <CartDialog isOpen={isCartOpen} onOpenChange={setCartOpen} />
