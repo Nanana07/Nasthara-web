@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, BookHeart, Heart, HomeIcon } from 'lucide-react';
+import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, BookHeart, Heart, HomeIcon, Wand2 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 
@@ -27,7 +27,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 
 export const maxDuration = 60;
 
-const products: Product[] = [
+export const products: Product[] = [
     {
         name: 'Nastar',
         bestseller: true,
@@ -191,6 +191,12 @@ const Header: FC<{ onCartClick: () => void; showHomeButton?: boolean }> = ({ onC
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link href="/mood-pairing">
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    <span>Pilih Kuenya</span>
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/blog">
                     <BookHeart className="mr-2 h-4 w-4" />
