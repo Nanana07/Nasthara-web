@@ -194,7 +194,7 @@ const Header: FC<{ onCartClick: () => void; showHomeButton?: boolean }> = ({ onC
                 <DropdownMenuItem asChild>
                   <Link href="/mood-pairing">
                     <Wand2 className="mr-2 h-4 w-4" />
-                    <span>Pilih Kuenya</span>
+                    <span>Rekomendasi Kue</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
