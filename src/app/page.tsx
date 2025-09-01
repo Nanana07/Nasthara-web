@@ -7,10 +7,9 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, BookHeart, Heart, HomeIcon, History } from 'lucide-react';
+import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, BookHeart, Heart, HomeIcon } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
-import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -571,55 +570,6 @@ const MidCtaSection: FC = () => (
   </section>
 );
 
-const RecentlyViewedSection: FC<{ onProductSelect: (product: Product) => void }> = ({ onProductSelect }) => {
-    const { viewedProducts, clearViewedProducts } = useRecentlyViewed();
-
-    if (!viewedProducts.length) {
-        return null;
-    }
-
-    const recentlyViewedProducts = viewedProducts.map(viewed => products.find(p => p.name === viewed.name)).filter(Boolean) as Product[];
-
-    return (
-        <section className="py-20 px-4">
-            <div className="container mx-auto">
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-3xl md:text-4xl font-headline font-bold text-accent flex items-center gap-3">
-                        <History /> Baru Dilihat
-                    </h2>
-                    <Button variant="ghost" onClick={clearViewedProducts} className="text-muted-foreground hover:text-destructive">
-                        Bersihkan
-                    </Button>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {recentlyViewedProducts.map((product) => (
-                        <Card key={product.name} className="overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300 shadow-lg hover:shadow-primary/20 bg-card">
-                             <button onClick={() => onProductSelect(product)} className="w-full text-left">
-                                <CardHeader className="p-0 relative">
-                                    <div className="aspect-video overflow-hidden w-full">
-                                      <Image
-                                        src={product.flavors[0].image}
-                                        alt={product.name}
-                                        width={400}
-                                        height={300}
-                                        data-ai-hint={product.flavors[0].hint}
-                                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out"
-                                      />
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="p-4">
-                                    <CardTitle className="font-headline text-xl mb-1">{product.name}</CardTitle>
-                                    <p className="font-semibold text-md text-accent">{formatPrice(product.flavors[0].sizes[0].price)}</p>
-                                </CardContent>
-                             </button>
-                        </Card>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
-};
-
 const ProductDetailDialog: FC<{
   product: Product | null;
   isOpen: boolean;
@@ -627,7 +577,6 @@ const ProductDetailDialog: FC<{
 }> = ({ product, isOpen, onOpenChange }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const { addViewedProduct } = useRecentlyViewed();
   
   const [selectedFlavor, setSelectedFlavor] = useState<ProductFlavorVariant | null>(null);
   const [selectedSize, setSelectedSize] = useState<ProductSizeVariant | null>(null);
@@ -635,9 +584,8 @@ const ProductDetailDialog: FC<{
   useEffect(() => {
     if (product) {
       setSelectedFlavor(product.flavors[0]);
-      addViewedProduct(product.name);
     }
-  }, [product, addViewedProduct]);
+  }, [product]);
 
   useEffect(() => {
     if (selectedFlavor) {
@@ -804,7 +752,6 @@ export default function Home() {
         <MidCtaSection />
         <TestimonialSection />
         <SeasonalSection/>
-        <RecentlyViewedSection onProductSelect={handleProductSelect}/>
       </main>
       <Footer />
       <CartDialog isOpen={isCartOpen} onOpenChange={setCartOpen} />
