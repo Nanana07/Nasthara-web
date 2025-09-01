@@ -5,7 +5,11 @@
  * - recommendGift - A function that handles the cookie gift recommendation process.
  */
 import { ai } from '@/ai/genkit';
-import { GiftAssistantInputSchema, GiftAssistantOutputSchema, type GiftAssistantInput } from '@/ai/flows/gift-assistant-types';
+import { GiftAssistantInputSchema, GiftAssistantOutputSchema, type GiftAssistantInput, type GiftAssistantOutput } from '@/ai/flows/gift-assistant-types';
+
+export async function recommendGift(input: GiftAssistantInput): Promise<GiftAssistantOutput> {
+  return recommendGiftFlow(input);
+}
 
 const products = [
     { name: 'Nastar', description: 'Manis, lumer di mulut, dengan isian selai nanas premium. Klasik dan selalu jadi favorit, cocok untuk hadiah bagi orang tua atau acara formal.' },
@@ -16,7 +20,7 @@ const products = [
     { name: 'Bawang Gunting', description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Pilihan tepat untuk hadiah bagi yang tidak terlalu suka manis atau sebagai teman nonton.' },
 ];
 
-export const recommendGiftFlow = ai.defineFlow(
+const recommendGiftFlow = ai.defineFlow(
   {
     name: 'recommendGiftFlow',
     inputSchema: GiftAssistantInputSchema,

@@ -5,9 +5,13 @@
  * - generateCookieStory - A function that handles the cookie story generation process.
  */
 import { ai } from '@/ai/genkit';
-import { StoryInputSchema, StoryOutputSchema, type StoryInput } from '@/ai/flows/story-generator-types';
+import { StoryInputSchema, StoryOutputSchema, type StoryInput, type StoryOutput } from '@/ai/flows/story-generator-types';
 
-export const generateCookieStoryFlow = ai.defineFlow(
+export async function generateCookieStory(input: StoryInput): Promise<StoryOutput> {
+  return generateCookieStoryFlow(input);
+}
+
+const generateCookieStoryFlow = ai.defineFlow(
   {
     name: 'generateCookieStoryFlow',
     inputSchema: StoryInputSchema,

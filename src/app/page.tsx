@@ -7,13 +7,15 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { runFlow } from '@genkit-ai/next/client';
 import { Instagram, Cookie, Star, Minus, Plus, ShoppingCart, Trash2, Wand2, Loader2, Sparkles, ChefHat, CakeSlice, Wheat, BookOpen, Gift, BookHeart, Heart, HomeIcon } from 'lucide-react';
 import { useCart, type CartItem } from '@/contexts/CartContext';
 import type { Product, ProductFlavorVariant, ProductSizeVariant } from '@/types/product';
 import { type RecommendationInput, RecommendationInputSchema, type RecommendationOutput } from '@/ai/flows/recommend-cookie-types';
+import { recommendCookie } from '@/ai/flows/recommend-cookie-flow';
 import { type StoryInput, type StoryOutput } from '@/ai/flows/story-generator-types';
+import { generateCookieStory } from '@/ai/flows/story-generator-flow';
 import { type GiftAssistantInput, GiftAssistantInputSchema, type GiftAssistantOutput } from '@/ai/flows/gift-assistant-types';
+import { recommendGift } from '@/ai/flows/gift-assistant-flow';
 
 
 import { Button } from '@/components/ui/button';
@@ -607,7 +609,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
         setStory(null);
         setStoryError(null);
         try {
-            const result = await runFlow<RecommendationInput, RecommendationOutput>('recommendCookieFlow', values);
+            const result = await recommendCookie(values);
             setRecommendation(result);
         } catch (e) {
             setError("Maaf, terjadi kesalahan saat membuat rekomendasi. Coba lagi nanti.");
@@ -624,7 +626,7 @@ const AIRecommenderSection: FC<{ onProductSelect: (product: Product) => void }> 
         setStory(null);
         setStoryError(null);
         try {
-            const result = await runFlow<StoryInput, StoryOutput>('generateCookieStoryFlow', {
+            const result = await generateCookieStory({
                 name: recommendation.name,
                 description: recommendedProductFlavor?.description || '',
             });
@@ -809,7 +811,7 @@ const GiftAssistantSection: FC<{ onProductSelect: (product: Product) => void }> 
         setRecommendation(null);
         setError(null);
         try {
-            const result = await runFlow<GiftAssistantInput, GiftAssistantOutput>('recommendGiftFlow', values);
+            const result = await recommendGift(values);
             setRecommendation(result);
         } catch (e) {
             setError("Maaf, terjadi kesalahan saat mencari kado. Coba lagi nanti.");

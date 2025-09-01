@@ -5,7 +5,11 @@
  * - recommendCookie - A function that handles the cookie recommendation process.
  */
 import { ai } from '@/ai/genkit';
-import { RecommendationInputSchema, RecommendationOutputSchema, type RecommendationInput } from '@/ai/flows/recommend-cookie-types';
+import { RecommendationInputSchema, RecommendationOutputSchema, type RecommendationInput, type RecommendationOutput } from '@/ai/flows/recommend-cookie-types';
+
+export async function recommendCookie(input: RecommendationInput): Promise<RecommendationOutput> {
+  return recommendCookieFlow(input);
+}
 
 const products = [
     { name: 'Nastar', description: 'Manis, lumer di mulut, dengan isian selai nanas premium. Klasik dan selalu jadi favorit.' },
@@ -16,7 +20,7 @@ const products = [
     { name: 'Bawang Gunting', description: 'Camilan gurih dan renyah dengan aroma bawang yang khas. Cocok untuk yang tidak terlalu suka manis.' },
 ];
 
-export const recommendCookieFlow = ai.defineFlow(
+const recommendCookieFlow = ai.defineFlow(
   {
     name: 'recommendCookieFlow',
     inputSchema: RecommendationInputSchema,
